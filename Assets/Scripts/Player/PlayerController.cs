@@ -45,10 +45,10 @@ public float ballFlipForce = 4f;   // начальная скорость при
     [SerializeField] private Sprite cubeModeSprite;
     [SerializeField] private float cubeSpriteRotationSpeed = 360f; // Степень в секунду
     [SerializeField] private float cubeSpriteRotationSmoothness = 10f;
-    [Header("Geometry Dash feel (куб)")]
     // Вращение куба в воздухе: ровно 90° за весь прыжок (от отрыва до приземления), с постоянной скоростью
     private float CubeSpinSpeed => (jumpForce > 0f && cubeGravity > 0f) ? 90f * cubeGravity / (2f * jumpForce) : 0f;
     private bool cubeWasGrounded = true;                    // для мгновенного округления при касании
+    [Header("Geometry Dash feel (куб)")]
     [SerializeField] private float cubeMaxFallSpeed = 20f;  // максимальная скорость падения куба
     [SerializeField] private bool holdToJump = false;      // зажатие прыгает само при приземлении (выключено: подозрение на подбросы)
     [SerializeField] private Vector3 cubeSpriteOffset = Vector3.zero;
