@@ -10,8 +10,9 @@ public class PlayerController : MonoBehaviour
     
     [Header("Настройки")]
     public float moveSpeed = 8f;
-    public float jumpForce = 9.5f;          // ниже прыжок, но дольше в воздухе (см. cubeGravityScale)
-    [SerializeField] private float cubeGravityScale = 2.2f; // меньше гравитация = медленнее и дальше
+    // Куб: высота ≈1.8 юнита, полное время в воздухе ≈1.0 с (g = 2H/t², v = g·t, t = 0.5 с)
+    public float jumpForce = 7.2f;
+    [SerializeField] private float cubeGravityScale = 1.47f; // 14.4 м/с² / 9.81
     public float shipFlyForce = 15f;
     public float shipGravityScale = 2f;
     public float waveGravityScale = 1.5f;
@@ -45,8 +46,8 @@ public float ballFlipForce = 4f;   // начальная скорость при
     [SerializeField] private float cubeSpriteRotationSpeed = 360f; // Степень в секунду
     [SerializeField] private float cubeSpriteRotationSmoothness = 10f;
     [Header("Geometry Dash feel (куб)")]
-    [SerializeField] private float cubeSpinSpeed = 900f;   // градусов в секунду в воздухе (≈2 оборота за прыжок)
-    [SerializeField] private float cubeSnapSpeed = 20f;    // скорость доворота к 90° на земле
+    [SerializeField] private float cubeSpinSpeed = 540f;   // градусов в секунду в воздухе (постоянная)
+    private bool cubeWasGrounded = true;                    // для мгновенного округления при касании
     [SerializeField] private bool holdToJump = true;       // зажатие прыгает само при приземлении
     [SerializeField] private Vector3 cubeSpriteOffset = Vector3.zero;
     [SerializeField] private bool inheritMainSpriteColor = true;
@@ -561,17 +562,16 @@ private List<PracticeStartPoint> practicePoints = new List<PracticeStartPoint>()
         Transform spin = cubeModeSpriteRenderer.transform;
         if (!isGrounded)
         {
-            // В воздухе куб крутится постоянно, как в Geometry Dash
+            // В воздухе — постоянная угловая скорость
             spin.localRotation *= Quaternion.Euler(0f, 0f, -cubeSpinSpeed * Time.fixedDeltaTime);
         }
-        else
+        else if (!cubeWasGrounded)
         {
-            // На земле плавно довернуть до ближайшего угла, кратного 90°
+            // Момент касания земли: сразу округляем угол до ближайшего кратного 90°
             float z = spin.localEulerAngles.z;
-            float target = Mathf.Round(z / 90f) * 90f;
-            float newZ = Mathf.LerpAngle(z, target, cubeSnapSpeed * Time.fixedDeltaTime);
-            spin.localRotation = Quaternion.Euler(0f, 0f, newZ);
+            spin.localRotation = Quaternion.Euler(0f, 0f, Mathf.Round(z / 90f) * 90f);
         }
+        cubeWasGrounded = isGrounded;
     }
     
     public void RotateCubeSprite90Degrees()
