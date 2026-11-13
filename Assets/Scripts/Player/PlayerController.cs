@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 8f;
     // Куб: высота ≈1.8 юнита, полное время в воздухе ≈1.0 с (g = 2H/t², v = g·t, t = 0.5 с)
     public float jumpForce = 7.2f;
-    [SerializeField] private float cubeGravityScale = 1.47f; // 14.4 м/с² / 9.81
+    [SerializeField] private float cubeGravity = 14.4f;      // м/с², высота прыжка = v²/(2g) = 1.8 юнита
     public float shipFlyForce = 15f;
     public float shipGravityScale = 2f;
     public float waveGravityScale = 1.5f;
@@ -494,10 +494,16 @@ private List<PracticeStartPoint> practicePoints = new List<PracticeStartPoint>()
         }
         else if (currentMode == PlayerMode.Cube)
         {
-            // Ограничиваем вертикальную скорость: куб не может улететь выше прыжка
-            // (защита от выброса при выталкивании из блоков)
-            rb.velocity = new Vector2(rb.velocity.x,
-                Mathf.Clamp(rb.velocity.y, -cubeMaxFallSpeed, jumpForce * 1.1f));
+            // Куб сам ведёт вертикальную скорость: гравитация Unity выключена,
+            // поэтому высота и время прыжка не зависят от внешних сил и импульсов.
+            rb.gravityScale = 0f;
+            float vy = rb.velocity.y;
+            if (isGrounded && vy <= 0f)
+                vy = 0f;
+            else
+                vy -= cubeGravity * Time.fixedDeltaTime;
+            vy = Mathf.Clamp(vy, -cubeMaxFallSpeed, jumpForce);
+            rb.velocity = new Vector2(rb.velocity.x, vy);
 
             // Обработка вращения куба при прыжке (только визуально через отдельный спрайт)
             HandleCubeSpriteRotation();
@@ -1618,7 +1624,7 @@ private void Die()
         switch (currentMode)
         {
             case PlayerMode.Cube:
-                rb.gravityScale = cubeGravityScale;
+                rb.gravityScale = 0f; // гравитацией куба управляет cubeGravity в FixedUpdate
                 rb.drag = 0f;
                 isUpsideDown = false;
                 isHoldingWave = false;
