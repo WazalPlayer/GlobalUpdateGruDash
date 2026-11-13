@@ -10,22 +10,18 @@ public static class MarketPagerBuilder
 {
     private const string ArrowPath = "Assets/UI/Market/arrow.png";
 
-    [MenuItem("Tools/Market/Add Page Buttons to Selected Panel")]
+    // Сам находит MarketplaceUI в открытой сцене и его панель, выделять ничего не нужно
+    [MenuItem("Tools/Market/Add Page Buttons")]
     public static void Build()
     {
-        GameObject panel = Selection.activeGameObject;
-        if (panel == null)
+        MarketplaceUI marketUI = Object.FindObjectOfType<MarketplaceUI>(true);
+        if (marketUI == null)
         {
-            EditorUtility.DisplayDialog("Маркет", "Выделите панель Market в Hierarchy.", "OK");
+            EditorUtility.DisplayDialog("Маркет", "В открытой сцене не найден MarketplaceUI. Откройте сцену с маркетом.", "OK");
             return;
         }
 
-        MarketplaceUI marketUI = panel.GetComponentInChildren<MarketplaceUI>(true);
-        if (marketUI == null)
-        {
-            EditorUtility.DisplayDialog("Маркет", "В выбранной панели нет MarketplaceUI.", "OK");
-            return;
-        }
+        GameObject panel = marketUI.marketplacePanel != null ? marketUI.marketplacePanel : marketUI.gameObject;
 
         Sprite arrow = PrepareArrow();
 
