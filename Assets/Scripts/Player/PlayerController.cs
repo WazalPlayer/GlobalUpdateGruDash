@@ -48,6 +48,7 @@ public float ballFlipForce = 4f;   // начальная скорость при
     [Header("Geometry Dash feel (куб)")]
     [SerializeField] private float cubeSpinSpeed = 540f;   // градусов в секунду в воздухе (постоянная)
     private bool cubeWasGrounded = true;                    // для мгновенного округления при касании
+    [SerializeField] private float cubeMaxFallSpeed = 20f;  // максимальная скорость падения куба
     [SerializeField] private bool holdToJump = true;       // зажатие прыгает само при приземлении
     [SerializeField] private Vector3 cubeSpriteOffset = Vector3.zero;
     [SerializeField] private bool inheritMainSpriteColor = true;
@@ -209,9 +210,6 @@ private List<PracticeStartPoint> practicePoints = new List<PracticeStartPoint>()
     {
         if (rb == null) rb = GetComponent<Rigidbody2D>();
 
-        // Непрерывная проверка столкновений: игрок не проскакивает и не застревает внутри блоков на высокой скорости
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         originalScale = transform.localScale;
         
@@ -496,6 +494,11 @@ private List<PracticeStartPoint> practicePoints = new List<PracticeStartPoint>()
         }
         else if (currentMode == PlayerMode.Cube)
         {
+            // Ограничиваем вертикальную скорость: куб не может улететь выше прыжка
+            // (защита от выброса при выталкивании из блоков)
+            rb.velocity = new Vector2(rb.velocity.x,
+                Mathf.Clamp(rb.velocity.y, -cubeMaxFallSpeed, jumpForce * 1.1f));
+
             // Обработка вращения куба при прыжке (только визуально через отдельный спрайт)
             HandleCubeSpriteRotation();
             ClearTrails();
