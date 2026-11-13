@@ -247,6 +247,35 @@ private void OnDetailCloseClicked()
         }
     }
     
+    // Показать страницу уровней. append = true: добавить в конец без перерисовки всего списка
+    public void ShowLevelPage(List<SupabaseLevelData> levels, bool append)
+    {
+        if (levels == null) levels = new List<SupabaseLevelData>();
+
+        if (!append || allLevels == null)
+        {
+            allLevels = new List<SupabaseLevelData>(levels);
+            ApplyFiltersAndSort();
+            UpdateRatedAndWeeklyLists();
+        }
+        else
+        {
+            allLevels.AddRange(levels);
+            // Добавляем только новые карточки, остальные не трогаем (меньше лагов)
+            if (levelEntryPrefab != null && levelsContainer != null)
+            {
+                foreach (var level in levels)
+                {
+                    GameObject entry = Instantiate(levelEntryPrefab, levelsContainer);
+                    MarketplaceLevelEntryUI entryUI = entry.GetComponent<MarketplaceLevelEntryUI>();
+                    if (entryUI != null) entryUI.Setup(level, this);
+                }
+            }
+        }
+
+        SetStatus($"Загружено {allLevels.Count} уровней");
+    }
+
     private void OnLevelsLoaded(List<SupabaseLevelData> levels)
     {
         allLevels = levels ?? new List<SupabaseLevelData>();

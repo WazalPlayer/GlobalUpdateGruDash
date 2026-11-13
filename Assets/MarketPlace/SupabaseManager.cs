@@ -198,6 +198,35 @@ public class SupabaseManager : MonoBehaviour
     {
         StartCoroutine(GetLevelsCoroutine(callback));
     }
+
+    // 📄 СТРАНИЦА УРОВНЕЙ (offset/limit), новые сверху
+    public void GetLevelsPage(int offset, int limit, System.Action<List<SupabaseLevelData>> callback)
+    {
+        StartCoroutine(GetLevelsPageCoroutine(offset, limit, callback));
+    }
+
+    private IEnumerator GetLevelsPageCoroutine(int offset, int limit, System.Action<List<SupabaseLevelData>> callback)
+    {
+        string url = $"{supabaseUrl}/rest/v1/{levelsTable}?select=*&order=created_at.desc&offset={offset}&limit={limit}";
+
+        using (UnityWebRequest request = UnityWebRequest.Get(url))
+        {
+            request.SetRequestHeader("apikey", supabaseKey);
+            request.SetRequestHeader("Authorization", $"Bearer {supabaseKey}");
+
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                callback?.Invoke(ParseLevelsFromJSON(request.downloadHandler.text));
+            }
+            else
+            {
+                Debug.LogError($"❌ Ошибка загрузки страницы уровней: {request.error}");
+                callback?.Invoke(new List<SupabaseLevelData>());
+            }
+        }
+    }
     
     private IEnumerator GetLevelsCoroutine(System.Action<List<SupabaseLevelData>> callback)
     {
