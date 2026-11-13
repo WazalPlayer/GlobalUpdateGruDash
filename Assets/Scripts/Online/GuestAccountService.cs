@@ -69,6 +69,18 @@ public class GuestAccountService : MonoBehaviour
         }, true);
     }
 
+    // Токен Firebase живёт около часа: при 401 берём новый по сохранённым e-mail и паролю
+    public void RefreshSession(Action<bool, string> done)
+    {
+        if (!PlayerPrefs.HasKey(KeyPassword))
+        {
+            done?.Invoke(false, "Гостевой аккаунт ещё не создан");
+            return;
+        }
+        IdToken = null;
+        StartCoroutine(AuthCoroutine("accounts:signInWithPassword", PlayerPrefs.GetString(KeyEmail), PlayerPrefs.GetString(KeyPassword), done, false));
+    }
+
     private void RegisterInSupabase(Action<bool, string> done)
     {
         if (PlayerPrefs.GetInt(KeySupabaseDone, 0) == 1)

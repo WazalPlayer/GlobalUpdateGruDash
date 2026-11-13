@@ -5,9 +5,9 @@ public static class FirebaseSettings
     // Firebase Console -> Project settings -> Web API Key
     public const string ApiKey = "AIzaSyCQZgDBJLGWXHHj-3FJ5eIP2LhScqLaDK4";
 
-    // Realtime Database URL, без слеша в конце. База должна быть создана в консоли Firebase
-    // (проект gru-dash-game-7291, регион us-central1): ссылка появится после создания.
-    public const string DatabaseUrl = "https://gru-dash-game-7291-default-rtdb.firebaseio.com";
+    // Realtime Database URL, без слеша в конце. База создана в регионе europe-west1
+    // (старый адрес *.firebaseio.com для неё не работает, отдаёт 404).
+    public const string DatabaseUrl = "https://gru-dash-game-7291-default-rtdb.europe-west1.firebasedatabase.app";
 
     // Домен для служебных гостевых e-mail (Firebase Auth принимает адрес без подтверждения)
     public const string GuestEmailDomain = "guest.gru-dash.app";

@@ -61,7 +61,7 @@ public float ballFlipForce = 4f;   // начальная скорость при
     [Header("Geometry Dash feel (куб)")]
     [SerializeField] private float cubeSpinFraction = 0.8f; // доля времени полёта, за которую куб делает 90°
     [SerializeField] private float cubeMaxFallSpeed = 20f;  // максимальная скорость падения куба
-    [SerializeField] private bool holdToJump = false;      // зажатие прыгает само при приземлении (выключено: подозрение на подбросы)
+    [SerializeField] private bool holdToJump = true;       // зажатие (ЛКМ, пробел, Shift, касание) прыгает само при приземлении
     [SerializeField] private Vector3 cubeSpriteOffset = Vector3.zero;
     [SerializeField] private bool inheritMainSpriteColor = true;
     
@@ -911,7 +911,7 @@ else
     {
         // Куб: зажатие прыгает само, как в Geometry Dash
         if (currentMode == PlayerMode.Cube && holdToJump &&
-            (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space)) &&
+            IsJumpHeld() &&
             (isGrounded || coyoteTimer > 0))
         {
             Jump();
@@ -919,7 +919,7 @@ else
         }
 
         // Обычная обработка для других режимов
-        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)))
+        if (IsJumpPressed())
         {
             switch (currentMode)
             {
@@ -1309,6 +1309,27 @@ public void FlipBallGravity(bool forceGroundCheck = false)
             // Для других режимов просто инвертируем гравитацию
             rb.gravityScale *= -1;
         }
+    }
+
+    // Ввод для прыжка: ЛКМ, пробел, Shift или касание экрана (зажатие)
+    private bool IsJumpHeld()
+    {
+        return Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space) ||
+               Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) ||
+               Input.touchCount > 0;
+    }
+
+    // Нажатие для прыжка (момент нажатия): ЛКМ, пробел, Shift или касание
+    private bool IsJumpPressed()
+    {
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) ||
+            Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+            return true;
+        for (int i = 0; i < Input.touchCount; i++)
+        {
+            if (Input.GetTouch(i).phase == TouchPhase.Began) return true;
+        }
+        return false;
     }
 
     // Есть ли контакт, у которого поверхность смотрит вверх (куб приземлился на блок)

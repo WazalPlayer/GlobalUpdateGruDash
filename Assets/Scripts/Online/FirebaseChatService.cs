@@ -40,6 +40,16 @@ public class FirebaseChatService : MonoBehaviour
         if (IsPolling) return;
         if (!FirebaseSettings.IsConfigured) { OnError?.Invoke("Firebase не настроен"); return; }
         IsPolling = true;
+
+        // Если гостевого входа ещё нет (или сессия потерялась), входим перед загрузкой чата
+        if (GuestAccountService.Instance != null && !GuestAccountService.Instance.IsSignedIn)
+        {
+            GuestAccountService.Instance.EnsureGuest((ok, msg) =>
+            {
+                if (!ok) OnError?.Invoke("Вход в чат не выполнен: " + msg);
+            });
+        }
+
         pollRoutine = StartCoroutine(PollLoop());
     }
 
@@ -95,7 +105,8 @@ public class FirebaseChatService : MonoBehaviour
 
             if (request.result != UnityWebRequest.Result.Success)
             {
-                OnError?.Invoke("Не удалось отправить: " + request.error);
+                if (request.responseCode == 401) RefreshAfterUnauthorized("Сессия обновлена, отправьте сообщение ещё раз");
+                else OnError?.Invoke("Не удалось отправить: " + request.error);
                 yield break;
             }
         }
@@ -117,7 +128,8 @@ public class FirebaseChatService : MonoBehaviour
 
             if (request.result != UnityWebRequest.Result.Success)
             {
-                OnError?.Invoke("Чат недоступен: " + request.error);
+                if (request.responseCode == 401) RefreshAfterUnauthorized("Сессия обновлена, чат загружается...");
+                else OnError?.Invoke("Чат недоступен: " + request.error);
                 yield break;
             }
 
@@ -128,6 +140,19 @@ public class FirebaseChatService : MonoBehaviour
             Messages.AddRange(parsed);
             OnMessagesUpdated?.Invoke(Messages);
         }
+    }
+
+    private void RefreshAfterUnauthorized(string okMessage)
+    {
+        if (GuestAccountService.Instance == null)
+        {
+            OnError?.Invoke("Нет гостевого аккаунта");
+            return;
+        }
+        GuestAccountService.Instance.RefreshSession((ok, msg) =>
+        {
+            OnError?.Invoke(ok ? okMessage : "Не удалось войти в чат: " + msg);
+        });
     }
 
     // Ответ Firebase: {"key1":{...},"key2":{...}} (или "null", если пусто)
