@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3508175298419623371
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8717469033939992515}
+  - component: {fileID: 8701036803344051281}
+  - component: {fileID: 5612644232871570345}
+  - component: {fileID: 3177365515846249068}
+  - component: {fileID: 4643189746170035966}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8717469033939992515
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3508175298419623371}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8701036803344051281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3508175298419623371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78e798bc7729bf24f81f911a8ad7dcb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalCoins: 0
+  currentLevel: 1
+  maxLevel: 10
+  selectedIcon: 0
+  selectedMusic: 0
+  playerIcons:
+  - {fileID: 21300000, guid: 2f3ae5fe474a01b499231ab678f20e27, type: 3}
+  musicTracks:
+  - {fileID: 8300000, guid: 0ff4332823907984697cce5e9317b71b, type: 3}
+  - {fileID: 8300000, guid: de280c18bb5778441b6a581825493c54, type: 3}
+  - {fileID: 8300000, guid: 54043ddec5382744d95719d299e1392e, type: 3}
+  - {fileID: 8300000, guid: 397d5a45221a9274a8bde31a8cc01f47, type: 3}
+  - {fileID: 8300000, guid: 61253668c51b79b48a708d38393ab5c5, type: 3}
+  - {fileID: 8300000, guid: d582c0b285814fe4f93e9646d4c41c4e, type: 3}
+  - {fileID: 8300000, guid: 67e49e50f0ad2aa489204401789f196a, type: 3}
+  - {fileID: 8300000, guid: 6aa1e28c89f7a23428682c9909c8d518, type: 3}
+  - {fileID: 8300000, guid: b113db16dfe1cb143a3cf34d8db87e83, type: 3}
+  - {fileID: 8300000, guid: b4618efee5251d6458a8108f9670ecc9, type: 3}
+  isSoundOn: 1
+  isMusicOn: 1
+--- !u!114 &5612644232871570345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3508175298419623371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 017ada6691760bf4696b61643e549b35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenuPanel: {fileID: 0}
+  playButton: {fileID: 0}
+  levelSelectButton: {fileID: 0}
+  settingsButton: {fileID: 0}
+  quitButton: {fileID: 0}
+  levelSelectPanel: {fileID: 0}
+  levelButtons:
+  - {fileID: 0}
+  backFromLevelsButton: {fileID: 0}
+  settingsPanel: {fileID: 0}
+  soundToggle: {fileID: 0}
+  musicToggle: {fileID: 0}
+  iconSelectButton: {fileID: 0}
+  musicSelectButton: {fileID: 0}
+  backFromSettingsButton: {fileID: 0}
+  iconSelectPanel: {fileID: 0}
+  iconImages:
+  - {fileID: 0}
+  iconSelectButtons: []
+  backFromIconsButton: {fileID: 0}
+  musicSelectPanel: {fileID: 0}
+  musicTrackNames:
+  - {fileID: 0}
+  musicSelectButtons:
+  - {fileID: 0}
+  backFromMusicButton: {fileID: 0}
+  gameUIPanel: {fileID: 0}
+  coinsText: {fileID: 0}
+  levelText: {fileID: 0}
+  levelCompletePanel: {fileID: 0}
+  levelCompleteText: {fileID: 0}
+  nextLevelButton: {fileID: 0}
+  mainMenuButton: {fileID: 0}
+--- !u!114 &3177365515846249068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3508175298419623371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8919a2b4c5ed09f40adf1df25e4a76bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenuSceneName: MainMenu
+  requireConfirmation: 1
+  delayBeforeLoad: 0.5
+--- !u!114 &4643189746170035966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3508175298419623371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44ff8f75fbded344f808db9760bf69bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonBindings:
+  - button: {fileID: 0}
+    keyCode: 104
+  - button: {fileID: 0}
+    keyCode: 97
+  - button: {fileID: 0}
+    keyCode: 98
+  - button: {fileID: 0}
+    keyCode: 105

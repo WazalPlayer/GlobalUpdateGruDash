@@ -1,0 +1,370 @@
+[debug] [2026-11-13T20:39:29.236Z] ----------------------------------------------------------------------
+[debug] [2026-11-13T20:39:29.238Z] Command:       E:\noDEJS\node.exe C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js login:list
+[debug] [2026-11-13T20:39:29.239Z] CLI Version:   15.28.1
+[debug] [2026-11-13T20:39:29.239Z] Platform:      win32
+[debug] [2026-11-13T20:39:29.239Z] Node Version:  v22.22.2
+[debug] [2026-11-13T20:39:29.239Z] Detected Agent: claude-code_2-1-321_agent
+[debug] [2026-11-13T20:39:29.239Z] Time:          Fri Nov 13 2026 22:39:29 GMT+0200 (Восточная Европа, стандартное время)
+[debug] [2026-11-13T20:39:29.239Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-11-13T20:39:29.250Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] Logged in as golovastik401@gmail.com
+[debug] [2026-11-13T20:39:29.978Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2026-11-13T20:39:29.978Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2026-11-13T20:39:39.314Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:296:49)
+    at listOnTimeout (node:internal/timers:585:17)
+    at process.processTimers (node:internal/timers:521:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-11-13T20:39:49.805Z] ----------------------------------------------------------------------
+[debug] [2026-11-13T20:39:49.807Z] Command:       E:\noDEJS\node.exe C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js projects:create gru-dash-231740 --display-name GlobalUpdateGruDash
+[debug] [2026-11-13T20:39:49.808Z] CLI Version:   15.28.1
+[debug] [2026-11-13T20:39:49.808Z] Platform:      win32
+[debug] [2026-11-13T20:39:49.808Z] Node Version:  v22.22.2
+[debug] [2026-11-13T20:39:49.808Z] Detected Agent: claude-code_2-1-321_agent
+[debug] [2026-11-13T20:39:49.808Z] Time:          Fri Nov 13 2026 22:39:49 GMT+0200 (Восточная Европа, стандартное время)
+[debug] [2026-11-13T20:39:49.808Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-11-13T20:39:49.831Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-11-13T20:39:49.831Z] > authorizing via signed-in user (golovastik401@gmail.com)
+[debug] [2026-11-13T20:39:49.847Z] Checked if tokens are valid: false, expires at: 1793786550499
+[debug] [2026-11-13T20:39:49.848Z] Checked if tokens are valid: false, expires at: 1793786550499
+[debug] [2026-11-13T20:39:49.848Z] > refreshing access token with scopes: []
+[debug] [2026-11-13T20:39:49.850Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-11-13T20:39:49.850Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-11-13T20:39:50.225Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-11-13T20:39:50.225Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-11-13T20:39:50.239Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects [none]
+[debug] [2026-11-13T20:39:50.239Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"projectId":"gru-dash-231740","name":"GlobalUpdateGruDash"}
+[debug] [2026-11-13T20:39:51.468Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects 200
+[debug] [2026-11-13T20:39:51.469Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"name":"operations/create_project.global.6934410669005841408"}
+[debug] [2026-11-13T20:39:51.469Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:39:51.469Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:39:51.470Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.6934410669005841408 [none]
+[debug] [2026-11-13T20:39:51.868Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.6934410669005841408 200
+[debug] [2026-11-13T20:39:51.868Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.6934410669005841408 {"name":"operations/create_project.global.6934410669005841408"}
+[debug] [2026-11-13T20:39:52.369Z] [Project Creation Poller] Retrying task index 0
+[debug] [2026-11-13T20:39:52.370Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:39:52.370Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:39:52.370Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.6934410669005841408 [none]
+[debug] [2026-11-13T20:39:52.672Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.6934410669005841408 200
+[debug] [2026-11-13T20:39:52.672Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.6934410669005841408 {"name":"operations/create_project.global.6934410669005841408","metadata":{"@type":"type.googleapis.com/google.cloudresourcemanager.v1.ProjectCreationStatus","gettable":true,"ready":true},"done":true,"response":{"@type":"type.googleapis.com/google.cloudresourcemanager.v1.Project","projectNumber":"377297068552","projectId":"gru-dash-231740","lifecycleState":"ACTIVE","name":"GlobalUpdateGruDash","createTime":"2026-11-13T20:39:51.196Z"}}
+[debug] [2026-11-13T20:39:52.672Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:39:52.672Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:39:52.673Z] >>> [apiv2][query] POST https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740:addFirebase [none]
+[debug] [2026-11-13T20:39:57.294Z] <<< [apiv2][status] POST https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740:addFirebase 200
+[debug] [2026-11-13T20:39:57.294Z] <<< [apiv2][body] POST https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740:addFirebase {"name":"operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri"}
+[debug] [2026-11-13T20:39:57.294Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:39:57.294Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:39:57.294Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri [none]
+[debug] [2026-11-13T20:39:59.463Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri 200
+[debug] [2026-11-13T20:39:59.463Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri {"name":"operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri"}
+[debug] [2026-11-13T20:39:59.972Z] [Add Firebase Poller] Retrying task index 0
+[debug] [2026-11-13T20:39:59.973Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:39:59.973Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:39:59.973Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri [none]
+[debug] [2026-11-13T20:40:00.892Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri 200
+[debug] [2026-11-13T20:40:00.892Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri {"name":"operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri"}
+[debug] [2026-11-13T20:40:01.895Z] [Add Firebase Poller] Retrying task index 0
+[debug] [2026-11-13T20:40:01.895Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:40:01.895Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:40:01.895Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri [none]
+[debug] [2026-11-13T20:40:02.961Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri 200
+[debug] [2026-11-13T20:40:02.961Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri {"name":"operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri"}
+[debug] [2026-11-13T20:40:04.964Z] [Add Firebase Poller] Retrying task index 0
+[debug] [2026-11-13T20:40:04.964Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:40:04.964Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:40:04.964Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri [none]
+[debug] [2026-11-13T20:40:05.715Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri 200
+[debug] [2026-11-13T20:40:05.716Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri {"name":"operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri"}
+[debug] [2026-11-13T20:40:09.730Z] [Add Firebase Poller] Retrying task index 0
+[debug] [2026-11-13T20:40:09.730Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:40:09.730Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:40:09.730Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri [none]
+[debug] [2026-11-13T20:40:10.778Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri 200
+[debug] [2026-11-13T20:40:10.779Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri {"name":"operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri"}
+[debug] [2026-11-13T20:40:18.781Z] [Add Firebase Poller] Retrying task index 0
+[debug] [2026-11-13T20:40:18.781Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:40:18.781Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:40:18.781Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri [none]
+[debug] [2026-11-13T20:40:19.726Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri 200
+[debug] [2026-11-13T20:40:19.726Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri {"name":"operations/workflows/YzRmYzczMjAtYzU1Yi00ZTdmLTkxYmYtZWFhMDg5NzliM2Ri","done":true,"response":{"@type":"type.googleapis.com/google.firebase.service.v1beta1.FirebaseProject","projectId":"gru-dash-231740","projectNumber":"377297068552","displayName":"GlobalUpdateGruDash","name":"projects/gru-dash-231740","resources":{"hostingSite":"gru-dash-231740"}}}
+[info] 
+[info] === Your Firebase project is ready! ===
+[info] 
+[info] Project information:
+[info]    - Project ID: gru-dash-231740
+[info]    - Project Name: GlobalUpdateGruDash
+[info] 
+[info] Firebase console is available at
+[info] https://console.firebase.google.com/project/gru-dash-231740/overview
+[debug] [2026-11-13T20:40:29.741Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:296:49)
+    at listOnTimeout (node:internal/timers:585:17)
+    at process.processTimers (node:internal/timers:521:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-11-13T20:40:35.125Z] ----------------------------------------------------------------------
+[debug] [2026-11-13T20:40:35.128Z] Command:       E:\noDEJS\node.exe C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js database:instances:create gru-dash-231740-default-rtdb --location us-central1 --project gru-dash-231740
+[debug] [2026-11-13T20:40:35.129Z] CLI Version:   15.28.1
+[debug] [2026-11-13T20:40:35.129Z] Platform:      win32
+[debug] [2026-11-13T20:40:35.129Z] Node Version:  v22.22.2
+[debug] [2026-11-13T20:40:35.130Z] Detected Agent: claude-code_2-1-321_agent
+[debug] [2026-11-13T20:40:35.130Z] Time:          Fri Nov 13 2026 22:40:35 GMT+0200 (Восточная Европа, стандартное время)
+[debug] [2026-11-13T20:40:35.130Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-11-13T20:40:54.987Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-11-13T20:40:54.987Z] > authorizing via signed-in user (golovastik401@gmail.com)
+[debug] [2026-11-13T20:40:54.988Z] [iam] checking project gru-dash-231740 for permissions ["firebase.projects.get","firebasedatabase.instances.create"]
+[debug] [2026-11-13T20:40:55.000Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:40:55.000Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:40:55.001Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions [none]
+[debug] [2026-11-13T20:40:55.001Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions  x-goog-user-project=gru-dash-231740
+[debug] [2026-11-13T20:40:55.001Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions {"permissions":["firebase.projects.get","firebasedatabase.instances.create"]}
+[debug] [2026-11-13T20:40:56.600Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions 200
+[debug] [2026-11-13T20:40:56.601Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions {"permissions":["firebase.projects.get","firebasedatabase.instances.create"]}
+[debug] [2026-11-13T20:40:56.601Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:40:56.601Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:40:56.601Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740 [none]
+[debug] [2026-11-13T20:40:58.147Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740 200
+[debug] [2026-11-13T20:40:58.147Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740 {"projectId":"gru-dash-231740","projectNumber":"377297068552","displayName":"GlobalUpdateGruDash","name":"projects/gru-dash-231740","resources":{"hostingSite":"gru-dash-231740"},"state":"ACTIVE","labels":{"firebase":"enabled"},"etag":"1_fc203f10-b634-4404-a554-304ec2c25081"}
+[debug] [2026-11-13T20:41:03.151Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:296:49)
+    at listOnTimeout (node:internal/timers:585:17)
+    at process.processTimers (node:internal/timers:521:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-11-13T20:41:06.571Z] ----------------------------------------------------------------------
+[debug] [2026-11-13T20:41:06.573Z] Command:       E:\noDEJS\node.exe C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js database:instances:list --project gru-dash-231740
+[debug] [2026-11-13T20:41:06.573Z] CLI Version:   15.28.1
+[debug] [2026-11-13T20:41:06.574Z] Platform:      win32
+[debug] [2026-11-13T20:41:06.574Z] Node Version:  v22.22.2
+[debug] [2026-11-13T20:41:06.574Z] Detected Agent: claude-code_2-1-321_agent
+[debug] [2026-11-13T20:41:06.574Z] Time:          Fri Nov 13 2026 22:41:06 GMT+0200 (Восточная Европа, стандартное время)
+[debug] [2026-11-13T20:41:06.574Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-11-13T20:41:09.976Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-11-13T20:41:09.976Z] > authorizing via signed-in user (golovastik401@gmail.com)
+[debug] [2026-11-13T20:41:09.976Z] [iam] checking project gru-dash-231740 for permissions ["firebase.projects.get","firebasedatabase.instances.list"]
+[debug] [2026-11-13T20:41:09.986Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:41:09.986Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:41:09.987Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions [none]
+[debug] [2026-11-13T20:41:09.987Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions  x-goog-user-project=gru-dash-231740
+[debug] [2026-11-13T20:41:09.987Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions {"permissions":["firebase.projects.get","firebasedatabase.instances.list"]}
+[debug] [2026-11-13T20:41:10.991Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions 200
+[debug] [2026-11-13T20:41:10.992Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions {"permissions":["firebase.projects.get","firebasedatabase.instances.list"]}
+[debug] [2026-11-13T20:41:10.996Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:41:10.996Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:41:10.996Z] >>> [apiv2][query] GET https://firebasedatabase.googleapis.com/v1beta/projects/gru-dash-231740/locations/-/instances pageSize=100
+[debug] [2026-11-13T20:41:12.533Z] <<< [apiv2][status] GET https://firebasedatabase.googleapis.com/v1beta/projects/gru-dash-231740/locations/-/instances 403
+[debug] [2026-11-13T20:41:12.534Z] <<< [apiv2][body] GET https://firebasedatabase.googleapis.com/v1beta/projects/gru-dash-231740/locations/-/instances {"error":{"code":403,"message":"Permission 'firebasedatabase.instances.list' denied on resource '//firebasedatabase.googleapis.com/projects/gru-dash-231740/locations/-' (or it may not exist).","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"IAM_PERMISSION_DENIED","domain":"firebasedatabase.googleapis.com","metadata":{"resource":"projects/gru-dash-231740/locations/-","permission":"firebasedatabase.instances.list"}}]}}
+[debug] [2026-11-13T20:41:12.534Z] Request to https://firebasedatabase.googleapis.com/v1beta/projects/gru-dash-231740/locations/-/instances?pageSize=100 had HTTP Error: 403, Permission 'firebasedatabase.instances.list' denied on resource '//firebasedatabase.googleapis.com/projects/gru-dash-231740/locations/-' (or it may not exist).
+[debug] [2026-11-13T20:41:17.540Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:296:49)
+    at listOnTimeout (node:internal/timers:585:17)
+    at process.processTimers (node:internal/timers:521:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-11-13T20:41:23.406Z] ----------------------------------------------------------------------
+[debug] [2026-11-13T20:41:23.408Z] Command:       E:\noDEJS\node.exe C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js database:instances:create gru-dash-231740-default-rtdb --location us-central1 --project gru-dash-231740
+[debug] [2026-11-13T20:41:23.409Z] CLI Version:   15.28.1
+[debug] [2026-11-13T20:41:23.409Z] Platform:      win32
+[debug] [2026-11-13T20:41:23.409Z] Node Version:  v22.22.2
+[debug] [2026-11-13T20:41:23.409Z] Detected Agent: claude-code_2-1-321_agent
+[debug] [2026-11-13T20:41:23.409Z] Time:          Fri Nov 13 2026 22:41:23 GMT+0200 (Восточная Европа, стандартное время)
+[debug] [2026-11-13T20:41:23.410Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-11-13T20:41:26.376Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-11-13T20:41:26.377Z] > authorizing via signed-in user (golovastik401@gmail.com)
+[debug] [2026-11-13T20:41:26.377Z] [iam] checking project gru-dash-231740 for permissions ["firebase.projects.get","firebasedatabase.instances.create"]
+[debug] [2026-11-13T20:41:26.387Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:41:26.387Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:41:26.388Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions [none]
+[debug] [2026-11-13T20:41:26.388Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions  x-goog-user-project=gru-dash-231740
+[debug] [2026-11-13T20:41:26.388Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions {"permissions":["firebase.projects.get","firebasedatabase.instances.create"]}
+[debug] [2026-11-13T20:41:27.539Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions 200
+[debug] [2026-11-13T20:41:27.539Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions {"permissions":["firebase.projects.get","firebasedatabase.instances.create"]}
+[debug] [2026-11-13T20:41:27.540Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:41:27.540Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:41:27.540Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740 [none]
+[debug] [2026-11-13T20:41:28.262Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740 200
+[debug] [2026-11-13T20:41:28.263Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740 {"projectId":"gru-dash-231740","projectNumber":"377297068552","displayName":"GlobalUpdateGruDash","name":"projects/gru-dash-231740","resources":{"hostingSite":"gru-dash-231740"},"state":"ACTIVE","labels":{"firebase":"enabled"},"etag":"1_fc203f10-b634-4404-a554-304ec2c25081"}
+[debug] [2026-11-13T20:41:33.278Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:296:49)
+    at listOnTimeout (node:internal/timers:585:17)
+    at process.processTimers (node:internal/timers:521:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-11-13T20:41:50.490Z] ----------------------------------------------------------------------
+[debug] [2026-11-13T20:41:50.492Z] Command:       E:\noDEJS\node.exe C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js database:instances:create gru-dash-231740-default-rtdb --location us-central1 --project gru-dash-231740
+[debug] [2026-11-13T20:41:50.492Z] CLI Version:   15.28.1
+[debug] [2026-11-13T20:41:50.492Z] Platform:      win32
+[debug] [2026-11-13T20:41:50.492Z] Node Version:  v22.22.2
+[debug] [2026-11-13T20:41:50.493Z] Detected Agent: claude-code_2-1-321_agent
+[debug] [2026-11-13T20:41:50.493Z] Time:          Fri Nov 13 2026 22:41:50 GMT+0200 (Восточная Европа, стандартное время)
+[debug] [2026-11-13T20:41:50.493Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-11-13T20:41:53.140Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-11-13T20:41:53.141Z] > authorizing via signed-in user (golovastik401@gmail.com)
+[debug] [2026-11-13T20:41:53.141Z] [iam] checking project gru-dash-231740 for permissions ["firebase.projects.get","firebasedatabase.instances.create"]
+[debug] [2026-11-13T20:41:53.151Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:41:53.151Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:41:53.152Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions [none]
+[debug] [2026-11-13T20:41:53.152Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions  x-goog-user-project=gru-dash-231740
+[debug] [2026-11-13T20:41:53.152Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions {"permissions":["firebase.projects.get","firebasedatabase.instances.create"]}
+[debug] [2026-11-13T20:41:53.881Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions 200
+[debug] [2026-11-13T20:41:53.882Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions {"permissions":["firebase.projects.get","firebasedatabase.instances.create"]}
+[debug] [2026-11-13T20:41:53.882Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:41:53.882Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:41:53.882Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740 [none]
+[debug] [2026-11-13T20:41:54.437Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740 200
+[debug] [2026-11-13T20:41:54.437Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740 {"projectId":"gru-dash-231740","projectNumber":"377297068552","displayName":"GlobalUpdateGruDash","name":"projects/gru-dash-231740","resources":{"hostingSite":"gru-dash-231740"},"state":"ACTIVE","labels":{"firebase":"enabled"},"etag":"1_fc203f10-b634-4404-a554-304ec2c25081"}
+[debug] [2026-11-13T20:41:59.440Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:296:49)
+    at listOnTimeout (node:internal/timers:585:17)
+    at process.processTimers (node:internal/timers:521:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-11-13T20:42:05.567Z] ----------------------------------------------------------------------
+[debug] [2026-11-13T20:42:05.569Z] Command:       E:\noDEJS\node.exe C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js apps:create WEB GruDashWeb --project gru-dash-231740
+[debug] [2026-11-13T20:42:05.569Z] CLI Version:   15.28.1
+[debug] [2026-11-13T20:42:05.570Z] Platform:      win32
+[debug] [2026-11-13T20:42:05.570Z] Node Version:  v22.22.2
+[debug] [2026-11-13T20:42:05.570Z] Detected Agent: claude-code_2-1-321_agent
+[debug] [2026-11-13T20:42:05.570Z] Time:          Fri Nov 13 2026 22:42:05 GMT+0200 (Восточная Европа, стандартное время)
+[debug] [2026-11-13T20:42:05.570Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-11-13T20:42:05.602Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-11-13T20:42:05.602Z] > authorizing via signed-in user (golovastik401@gmail.com)
+[info] Create your WEB app in project gru-dash-231740:
+[debug] [2026-11-13T20:42:05.613Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:42:05.613Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:42:05.614Z] >>> [apiv2][query] POST https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740/webApps [none]
+[debug] [2026-11-13T20:42:05.614Z] >>> [apiv2][body] POST https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740/webApps {"displayName":"GruDashWeb"}
+[debug] [2026-11-13T20:42:07.574Z] <<< [apiv2][status] POST https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740/webApps 200
+[debug] [2026-11-13T20:42:07.574Z] <<< [apiv2][body] POST https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740/webApps {"name":"operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx"}
+[debug] [2026-11-13T20:42:07.575Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:42:07.575Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:42:07.575Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx [none]
+[debug] [2026-11-13T20:42:08.215Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx 200
+[debug] [2026-11-13T20:42:08.215Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx {"name":"operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx"}
+[debug] [2026-11-13T20:42:08.728Z] [Create Web app Poller] Retrying task index 0
+[debug] [2026-11-13T20:42:08.728Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:42:08.728Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:42:08.728Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx [none]
+[debug] [2026-11-13T20:42:09.365Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx 200
+[debug] [2026-11-13T20:42:09.365Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx {"name":"operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx"}
+[debug] [2026-11-13T20:42:10.380Z] [Create Web app Poller] Retrying task index 0
+[debug] [2026-11-13T20:42:10.381Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:42:10.381Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:42:10.381Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx [none]
+[debug] [2026-11-13T20:42:10.857Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx 200
+[debug] [2026-11-13T20:42:10.858Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx {"name":"operations/workflows/NjI4Y2JiZDktZDVmZS00ZmFlLWE5NjAtNGQzNzY5YzI1Zjgx","done":true,"response":{"@type":"type.googleapis.com/google.firebase.service.v1beta1.WebApp","name":"projects/gru-dash-231740/webApps/1:377297068552:web:bff18dcc854c0adfb8e7bd","appId":"1:377297068552:web:bff18dcc854c0adfb8e7bd","displayName":"GruDashWeb","projectId":"gru-dash-231740","webId":"NGNiMGYyYmItZDI0My00ODQ1LWI4NzgtOTE0M2JhZTI0N2Q1","apiKeyId":"d7a43d74-3856-4e7a-bfc7-c76cca07b5db","state":"ACTIVE","expireTime":"1970-01-01T00:00:00Z","etag":"1_f9bc79bf-eef8-4e15-baeb-cdb5ae4a428d"}}
+[info] 
+[info] 🎉🎉🎉 Your Firebase WEB App is ready! 🎉🎉🎉
+[info] 
+[info] App information:
+[info]   - App ID: 1:377297068552:web:bff18dcc854c0adfb8e7bd
+[info]   - Display name: GruDashWeb
+[info] 
+[info] You can run this command to print out your new app's Google Services config:
+[info]   firebase apps:sdkconfig WEB 1:377297068552:web:bff18dcc854c0adfb8e7bd
+[debug] [2026-11-13T20:42:20.881Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:296:49)
+    at listOnTimeout (node:internal/timers:585:17)
+    at process.processTimers (node:internal/timers:521:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-11-13T20:42:23.454Z] ----------------------------------------------------------------------
+[debug] [2026-11-13T20:42:23.456Z] Command:       E:\noDEJS\node.exe C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js apps:list WEB --project gru-dash-231740
+[debug] [2026-11-13T20:42:23.456Z] CLI Version:   15.28.1
+[debug] [2026-11-13T20:42:23.456Z] Platform:      win32
+[debug] [2026-11-13T20:42:23.456Z] Node Version:  v22.22.2
+[debug] [2026-11-13T20:42:23.457Z] Detected Agent: claude-code_2-1-321_agent
+[debug] [2026-11-13T20:42:23.457Z] Time:          Fri Nov 13 2026 22:42:23 GMT+0200 (Восточная Европа, стандартное время)
+[debug] [2026-11-13T20:42:23.457Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-11-13T20:42:23.492Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-11-13T20:42:23.493Z] > authorizing via signed-in user (golovastik401@gmail.com)
+[debug] [2026-11-13T20:42:23.504Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:42:23.504Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:42:23.505Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740/webApps pageSize=100
+[debug] [2026-11-13T20:42:24.846Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740/webApps 200
+[debug] [2026-11-13T20:42:24.846Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/gru-dash-231740/webApps {"apps":[{"name":"projects/gru-dash-231740/webApps/1:377297068552:web:bff18dcc854c0adfb8e7bd","appId":"1:377297068552:web:bff18dcc854c0adfb8e7bd","displayName":"GruDashWeb","projectId":"gru-dash-231740","webId":"NGNiMGYyYmItZDI0My00ODQ1LWI4NzgtOTE0M2JhZTI0N2Q1","apiKeyId":"d7a43d74-3856-4e7a-bfc7-c76cca07b5db","state":"ACTIVE","expireTime":"1970-01-01T00:00:00Z","etag":"1_f9bc79bf-eef8-4e15-baeb-cdb5ae4a428d"}]}
+[info] ┌──────────────────┬───────────────────────────────────────────┬──────────┐
+│ App Display Name │ App ID                                    │ Platform │
+├──────────────────┼───────────────────────────────────────────┼──────────┤
+│ GruDashWeb       │ 1:377297068552:web:bff18dcc854c0adfb8e7bd │ WEB      │
+└──────────────────┴───────────────────────────────────────────┴──────────┘
+[info] 
+[info] 1 app(s) total.
+[debug] [2026-11-13T20:42:34.963Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:296:49)
+    at listOnTimeout (node:internal/timers:585:17)
+    at process.processTimers (node:internal/timers:521:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-11-13T20:42:39.688Z] ----------------------------------------------------------------------
+[debug] [2026-11-13T20:42:39.690Z] Command:       E:\noDEJS\node.exe C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js apps:sdkconfig WEB 1:377297068552:web:bff18dcc854c0adfb8e7bd --project gru-dash-231740
+[debug] [2026-11-13T20:42:39.691Z] CLI Version:   15.28.1
+[debug] [2026-11-13T20:42:39.691Z] Platform:      win32
+[debug] [2026-11-13T20:42:39.691Z] Node Version:  v22.22.2
+[debug] [2026-11-13T20:42:39.691Z] Detected Agent: claude-code_2-1-321_agent
+[debug] [2026-11-13T20:42:39.691Z] Time:          Fri Nov 13 2026 22:42:39 GMT+0200 (Восточная Европа, стандартное время)
+[debug] [2026-11-13T20:42:39.691Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-11-13T20:42:39.728Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-11-13T20:42:39.729Z] > authorizing via signed-in user (golovastik401@gmail.com)
+[debug] [2026-11-13T20:42:39.739Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:42:39.739Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:42:39.740Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:377297068552:web:bff18dcc854c0adfb8e7bd/config [none]
+[debug] [2026-11-13T20:42:41.063Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:377297068552:web:bff18dcc854c0adfb8e7bd/config 200
+[debug] [2026-11-13T20:42:41.064Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:377297068552:web:bff18dcc854c0adfb8e7bd/config {"projectId":"gru-dash-231740","appId":"1:377297068552:web:bff18dcc854c0adfb8e7bd","storageBucket":"gru-dash-231740.firebasestorage.app","apiKey":"AIzaSyBIsPBGfOgoE0o0-JHtV6aQk7xOKL56vyA","authDomain":"gru-dash-231740.firebaseapp.com","messagingSenderId":"377297068552","projectNumber":"377297068552","version":"2"}
+[info] {
+  "projectId": "gru-dash-231740",
+  "appId": "1:377297068552:web:bff18dcc854c0adfb8e7bd",
+  "storageBucket": "gru-dash-231740.firebasestorage.app",
+  "apiKey": "AIzaSyBIsPBGfOgoE0o0-JHtV6aQk7xOKL56vyA",
+  "authDomain": "gru-dash-231740.firebaseapp.com",
+  "messagingSenderId": "377297068552",
+  "projectNumber": "377297068552",
+  "version": "2"
+}
+[debug] [2026-11-13T20:42:51.080Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:296:49)
+    at listOnTimeout (node:internal/timers:585:17)
+    at process.processTimers (node:internal/timers:521:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-11-13T20:47:08.992Z] ----------------------------------------------------------------------
+[debug] [2026-11-13T20:47:08.994Z] Command:       E:\noDEJS\node.exe C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js database:instances:list --project gru-dash-231740
+[debug] [2026-11-13T20:47:08.994Z] CLI Version:   15.28.1
+[debug] [2026-11-13T20:47:08.994Z] Platform:      win32
+[debug] [2026-11-13T20:47:08.994Z] Node Version:  v22.22.2
+[debug] [2026-11-13T20:47:08.994Z] Detected Agent: claude-code_2-1-321_agent
+[debug] [2026-11-13T20:47:08.995Z] Time:          Fri Nov 13 2026 22:47:08 GMT+0200 (Восточная Европа, стандартное время)
+[debug] [2026-11-13T20:47:08.995Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-11-13T20:47:11.867Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-11-13T20:47:11.867Z] > authorizing via signed-in user (golovastik401@gmail.com)
+[debug] [2026-11-13T20:47:11.867Z] [iam] checking project gru-dash-231740 for permissions ["firebase.projects.get","firebasedatabase.instances.list"]
+[debug] [2026-11-13T20:47:11.876Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:47:11.876Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:47:11.877Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions [none]
+[debug] [2026-11-13T20:47:11.877Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions  x-goog-user-project=gru-dash-231740
+[debug] [2026-11-13T20:47:11.877Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions {"permissions":["firebase.projects.get","firebasedatabase.instances.list"]}
+[debug] [2026-11-13T20:47:13.070Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions 200
+[debug] [2026-11-13T20:47:13.070Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gru-dash-231740:testIamPermissions {"permissions":["firebase.projects.get","firebasedatabase.instances.list"]}
+[debug] [2026-11-13T20:47:13.073Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:47:13.073Z] Checked if tokens are valid: true, expires at: 1794605989225
+[debug] [2026-11-13T20:47:13.073Z] >>> [apiv2][query] GET https://firebasedatabase.googleapis.com/v1beta/projects/gru-dash-231740/locations/-/instances pageSize=100
+[debug] [2026-11-13T20:47:14.518Z] <<< [apiv2][status] GET https://firebasedatabase.googleapis.com/v1beta/projects/gru-dash-231740/locations/-/instances 200
+[debug] [2026-11-13T20:47:14.518Z] <<< [apiv2][body] GET https://firebasedatabase.googleapis.com/v1beta/projects/gru-dash-231740/locations/-/instances {}
+[info] No database instances found.
+[debug] [2026-11-13T20:47:24.549Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\ПК\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:296:49)
+    at listOnTimeout (node:internal/timers:585:17)
+    at process.processTimers (node:internal/timers:521:7)
+[error] 
+[error] Error: An unexpected error has occurred.
