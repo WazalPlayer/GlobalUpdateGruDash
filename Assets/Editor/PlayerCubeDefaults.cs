@@ -14,7 +14,6 @@ public static class PlayerCubeDefaults
         "jumpForce",
         "cubeGravity",
         "cubeMaxFallSpeed",
-        "cubeSpinSpeed",
         "holdToJump"
     };
 

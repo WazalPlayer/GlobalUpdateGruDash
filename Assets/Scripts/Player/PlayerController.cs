@@ -46,7 +46,8 @@ public float ballFlipForce = 4f;   // начальная скорость при
     [SerializeField] private float cubeSpriteRotationSpeed = 360f; // Степень в секунду
     [SerializeField] private float cubeSpriteRotationSmoothness = 10f;
     [Header("Geometry Dash feel (куб)")]
-    [SerializeField] private float cubeSpinSpeed = 540f;   // градусов в секунду в воздухе (постоянная)
+    // Вращение куба в воздухе: ровно 90° за весь прыжок (от отрыва до приземления), с постоянной скоростью
+    private float CubeSpinSpeed => (jumpForce > 0f && cubeGravity > 0f) ? 90f * cubeGravity / (2f * jumpForce) : 0f;
     private bool cubeWasGrounded = true;                    // для мгновенного округления при касании
     [SerializeField] private float cubeMaxFallSpeed = 20f;  // максимальная скорость падения куба
     [SerializeField] private bool holdToJump = false;      // зажатие прыгает само при приземлении (выключено: подозрение на подбросы)
@@ -572,7 +573,7 @@ private List<PracticeStartPoint> practicePoints = new List<PracticeStartPoint>()
         if (!isGrounded)
         {
             // В воздухе — постоянная угловая скорость
-            spin.localRotation *= Quaternion.Euler(0f, 0f, -cubeSpinSpeed * Time.fixedDeltaTime);
+            spin.localRotation *= Quaternion.Euler(0f, 0f, -CubeSpinSpeed * Time.fixedDeltaTime);
         }
         else if (!cubeWasGrounded)
         {
@@ -1293,11 +1294,51 @@ public void FlipBallGravity(bool forceGroundCheck = false)
         }
     }
 
+    // Есть ли контакт, у которого поверхность смотрит вверх (куб приземлился на блок)
+    private bool HasTopContact(Collision2D collision)
+    {
+        foreach (ContactPoint2D c in collision.contacts)
+        {
+            if (c.normal.y > 0.3f) return true;
+        }
+        return false;
+    }
+
+    // Довернуть спрайт по часовой стрелке до ближайшей грани (кратной 90°) и встать на неё
+    private void StandOnNextFaceClockwise()
+    {
+        isGrounded = true;
+        cubeWasGrounded = true;
+        isJumping = false;
+
+        if (rb != null)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(0f, rb.velocity.y));
+        }
+
+        if (!useSeparateCubeSprite || cubeModeSpriteRenderer == null) return;
+
+        Transform spin = cubeModeSpriteRenderer.transform;
+        // Unity: положительный Z — против часовой стрелки, поэтому по часовой угол уменьшается
+        float z = Mathf.DeltaAngle(0f, spin.localEulerAngles.z);
+        float target = Mathf.Floor(z / 90f) * 90f;
+        if (Mathf.Abs(target - z) < 1f) target -= 90f; // всегда поворачиваем хотя бы немного
+        spin.localRotation = Quaternion.Euler(0f, 0f, target);
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Obstacle") && !isDead)
         {
-            if (currentMode == PlayerMode.Ship || currentMode == PlayerMode.Wave || 
+            bool isSpike = collision.gameObject.name.ToLower().Contains("spike");
+
+            if (currentMode == PlayerMode.Cube && !isSpike && HasTopContact(collision))
+            {
+                // Куб упал ребром/углом на блок: не разбиваемся, а встаём на грань,
+                // до которой он довернётся по часовой стрелке
+                StandOnNextFaceClockwise();
+            }
+            else if (currentMode == PlayerMode.Ship || currentMode == PlayerMode.Wave ||
                 currentMode == PlayerMode.UFO || currentMode == PlayerMode.Spider || currentMode == PlayerMode.Ball)
             {
                 ContactPoint2D contact = collision.contacts[0];
