@@ -247,6 +247,12 @@ private void OnDetailCloseClicked()
         }
     }
     
+    // Публичный вывод статуса (используется загрузчиком страниц)
+    public void SetStatusMessage(string message)
+    {
+        SetStatus(message);
+    }
+
     // Приоритетные уровни (рейтинговые и «Изи демон» и выше) — всегда полностью, в контейнер рейтинговых
     public void ShowPriorityLevels(List<SupabaseLevelData> levels)
     {

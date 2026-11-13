@@ -200,6 +200,9 @@ public class SupabaseManager : MonoBehaviour
     }
 
     // 📄 СТРАНИЦА УРОВНЕЙ (offset/limit), новые сверху
+    // true, если последний запрос уровней не дошёл до сервера (нет сети, DNS, ошибка HTTP)
+    public static bool LastLevelsRequestFailed { get; private set; }
+
     public void GetLevelsPage(int offset, int limit, System.Action<List<SupabaseLevelData>> callback, string filter = null)
     {
         StartCoroutine(GetLevelsPageCoroutine(offset, limit, filter, callback));
@@ -246,10 +249,12 @@ public class SupabaseManager : MonoBehaviour
 
             if (request.result == UnityWebRequest.Result.Success)
             {
+                LastLevelsRequestFailed = false;
                 callback?.Invoke(ParseLevelsFromJSON(request.downloadHandler.text));
             }
             else
             {
+                LastLevelsRequestFailed = true;
                 Debug.LogError($"❌ Ошибка загрузки страницы уровней: {request.error}");
                 callback?.Invoke(new List<SupabaseLevelData>());
             }
