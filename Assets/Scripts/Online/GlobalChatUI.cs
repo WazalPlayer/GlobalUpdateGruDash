@@ -1,15 +1,18 @@
 using System.Collections.Generic;
 using System.Text;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// Окно глобального чата. Создаётся автоматически в каждой сцене.
-// Кнопка «Чат» копируется из существующей кнопки в ButtonsMassive, поэтому стиль совпадает.
+// Окно глобального чата и кнопка «Чат». Всё создаётся кодом в каждой сцене,
+// сцены и префабы не меняются. Кнопка добавляется в ButtonsMassive, если он есть.
 public class GlobalChatUI : MonoBehaviour
 {
     private static GlobalChatUI instance;
+    private static Sprite bubbleSprite;
+
+    private static readonly Color ButtonGreen = new Color(0.45f, 0.85f, 0.2f, 1f);
+    private static readonly Color ButtonDarkGreen = new Color(0.25f, 0.6f, 0.1f, 1f);
 
     private GameObject panel;
     private Text messagesText;
@@ -28,10 +31,14 @@ public class GlobalChatUI : MonoBehaviour
             instance = go.AddComponent<GlobalChatUI>();
             instance.BuildPanel();
         }
+
         if (FindObjectOfType<EventSystem>() == null)
             new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+
         instance.AddMenuButton();
     }
+
+    // ---------- Окно чата ----------
 
     private void BuildPanel()
     {
@@ -51,7 +58,7 @@ public class GlobalChatUI : MonoBehaviour
         Text title = CreateText("Title", panel.transform, "Глобальный чат", 46, TextAnchor.MiddleCenter);
         SetRect(title.rectTransform, 0f, 0.9f, 1f, 1f);
 
-        Button close = CreateButton("Close", panel.transform, "Назад", new Color(0.3f, 0.75f, 0.2f));
+        Button close = CreateButton("Close", panel.transform, "Назад", ButtonGreen);
         SetRect(close.GetComponent<RectTransform>(), 0.03f, 0.92f, 0.3f, 0.99f);
         close.onClick.AddListener(ClosePanel);
 
@@ -91,14 +98,16 @@ public class GlobalChatUI : MonoBehaviour
         input = inputGo.AddComponent<InputField>();
         Text inputText = CreateText("Text", inputGo.transform, "", 30, TextAnchor.MiddleLeft);
         inputText.color = Color.black;
+        Stretch(inputText.rectTransform, 0.02f, 0f, 0.98f, 1f);
         Text placeholder = CreateText("Placeholder", inputGo.transform, "Написать сообщение...", 30, TextAnchor.MiddleLeft);
         placeholder.color = new Color(0, 0, 0, 0.4f);
+        Stretch(placeholder.rectTransform, 0.02f, 0f, 0.98f, 1f);
         input.textComponent = inputText;
         input.placeholder = placeholder;
         input.characterLimit = FirebaseSettings.ChatMaxLength;
         input.lineType = InputField.LineType.SingleLine;
 
-        Button send = CreateButton("Send", panel.transform, "Отправить", new Color(0.3f, 0.75f, 0.2f));
+        Button send = CreateButton("Send", panel.transform, "Отправить", ButtonGreen);
         SetRect(send.GetComponent<RectTransform>(), 0.77f, 0.1f, 0.97f, 0.18f);
         send.onClick.AddListener(SendCurrent);
 
@@ -107,48 +116,6 @@ public class GlobalChatUI : MonoBehaviour
         statusText.color = new Color(1f, 0.8f, 0.3f);
 
         panel.SetActive(false);
-        canvasGo.SetActive(true);
-    }
-
-    // Добавляет кнопку «Чат» в ButtonsMassive текущей сцены (копия существующей кнопки)
-    private void AddMenuButton()
-    {
-        GameObject container = GameObject.Find("ButtonsMassive");
-        if (container == null) return;
-        if (container.transform.Find("GlobalChatButton") != null) return;
-
-        Button source = container.GetComponentInChildren<Button>(true);
-        if (source == null) return;
-
-        GameObject clone = Instantiate(source.gameObject, container.transform);
-        clone.name = "GlobalChatButton";
-        clone.SetActive(true);
-
-        // Убираем старые скрипты и иконки исходной кнопки, оставляем фон и стиль
-        foreach (MonoBehaviour mb in clone.GetComponentsInChildren<MonoBehaviour>(true))
-        {
-            if (mb is Button || mb is Graphic || mb is LayoutElement) continue;
-            Destroy(mb);
-        }
-        foreach (Image img in clone.GetComponentsInChildren<Image>(true))
-        {
-            if (img.gameObject != clone) img.enabled = false;
-        }
-
-        Button button = clone.GetComponent<Button>();
-        button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(OpenPanel);
-
-        SetLabel(clone, "Чат");
-    }
-
-    private static void SetLabel(GameObject root, string text)
-    {
-        TMP_Text tmp = root.GetComponentInChildren<TMP_Text>(true);
-        if (tmp != null) { tmp.text = text; return; }
-
-        Text legacy = root.GetComponentInChildren<Text>(true);
-        if (legacy != null) { legacy.text = text; return; }
     }
 
     public void OpenPanel()
@@ -201,7 +168,105 @@ public class GlobalChatUI : MonoBehaviour
         if (statusText != null) statusText.text = message;
     }
 
-    // ---- помощники для создания UI ----
+    // ---------- Кнопка «Чат» в меню ----------
+
+    private void AddMenuButton()
+    {
+        GameObject container = GameObject.Find("ButtonsMassive");
+        if (container == null) return;
+        if (container.transform.Find("GlobalChatButton") != null) return;
+
+        // Размер берём у соседней кнопки, чтобы сетка выглядела одинаково
+        Vector2 size = new Vector2(150, 150);
+        Button sibling = container.GetComponentInChildren<Button>(true);
+        if (sibling != null)
+        {
+            Vector2 s = sibling.GetComponent<RectTransform>().rect.size;
+            if (s.x > 1f && s.y > 1f) size = s;
+        }
+
+        GameObject btn = new GameObject("GlobalChatButton", typeof(RectTransform), typeof(Image), typeof(Outline), typeof(Button));
+        btn.transform.SetParent(container.transform, false);
+        btn.GetComponent<RectTransform>().sizeDelta = size;
+
+        Image bg = btn.GetComponent<Image>();
+        bg.color = ButtonGreen;
+
+        Outline outline = btn.GetComponent<Outline>();
+        outline.effectColor = Color.white;
+        outline.effectDistance = new Vector2(4, -4);
+
+        // Тёмная полоска снизу, как у остальных кнопок
+        GameObject strip = CreateImage("BottomStrip", btn.transform, ButtonDarkGreen);
+        SetRect(strip.GetComponent<RectTransform>(), 0f, 0f, 1f, 0.2f);
+
+        // Иконка — пузырь чата, создаётся кодом
+        GameObject icon = CreateImage("Icon", btn.transform, Color.white);
+        icon.GetComponent<Image>().sprite = GetBubbleSprite();
+        icon.GetComponent<Image>().preserveAspect = true;
+        SetRect(icon.GetComponent<RectTransform>(), 0.22f, 0.3f, 0.78f, 0.82f);
+
+        Text label = CreateText("Label", btn.transform, "Чат", 36, TextAnchor.MiddleCenter);
+        label.fontStyle = FontStyle.Bold;
+        label.color = Color.white;
+        SetRect(label.rectTransform, 0f, 0f, 1f, 0.25f);
+
+        Button button = btn.GetComponent<Button>();
+        button.targetGraphic = bg;
+        button.onClick.AddListener(OpenPanel);
+    }
+
+    // Пузырь чата: белая заливка, тёмный контур, хвостик слева внизу. Рисуется в текстуре при первом вызове.
+    private static Sprite GetBubbleSprite()
+    {
+        if (bubbleSprite != null) return bubbleSprite;
+
+        const int size = 128;
+        Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        tex.filterMode = FilterMode.Bilinear;
+        tex.wrapMode = TextureWrapMode.Clamp;
+
+        Vector2 center = new Vector2(64, 74);
+        Vector2 radius = new Vector2(50, 36);
+        Vector2 t0 = new Vector2(38, 100), t1 = new Vector2(70, 100), t2 = new Vector2(40, 122);
+
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                Vector2 p = new Vector2(x, y);
+                bool inside = InEllipse(p, center, radius) || InTriangle(p, t0, t1, t2);
+                bool border = inside && (!InEllipse(p, center, radius - new Vector2(5, 5)) && !InTriangle(p, t0 + new Vector2(4, -4), t1 + new Vector2(-4, -4), t2 + new Vector2(0, 4)));
+                Color c = !inside ? new Color(0, 0, 0, 0) : (border ? new Color(0.05f, 0.2f, 0.4f, 1f) : new Color(1f, 1f, 1f, 1f));
+                tex.SetPixel(x, y, c);
+            }
+        }
+        tex.Apply();
+
+        bubbleSprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
+        return bubbleSprite;
+    }
+
+    private static bool InEllipse(Vector2 p, Vector2 c, Vector2 r)
+    {
+        float dx = (p.x - c.x) / r.x, dy = (p.y - c.y) / r.y;
+        return dx * dx + dy * dy <= 1f;
+    }
+
+    private static bool InTriangle(Vector2 p, Vector2 a, Vector2 b, Vector2 c)
+    {
+        float d1 = Sign(p, a, b), d2 = Sign(p, b, c), d3 = Sign(p, c, a);
+        bool hasNeg = d1 < 0 || d2 < 0 || d3 < 0;
+        bool hasPos = d1 > 0 || d2 > 0 || d3 > 0;
+        return !(hasNeg && hasPos);
+    }
+
+    private static float Sign(Vector2 p1, Vector2 p2, Vector2 p3)
+    {
+        return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+    }
+
+    // ---------- Помощники для UI ----------
 
     private static GameObject CreateImage(string name, Transform parent, Color color)
     {
