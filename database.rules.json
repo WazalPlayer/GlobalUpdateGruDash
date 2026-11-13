@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "chat": {
+      "global": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        ".indexOn": ["time"]
+      }
+    }
+  }
+}
