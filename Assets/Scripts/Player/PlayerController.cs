@@ -10,9 +10,9 @@ public class PlayerController : MonoBehaviour
     
     [Header("Настройки")]
     public float moveSpeed = 8f;
-    // Куб: высота ≈1.8 юнита, полное время в воздухе ≈1.0 с (g = 2H/t², v = g·t, t = 0.5 с)
-    public float jumpForce = 7.2f;
-    [SerializeField] private float cubeGravity = 14.4f;      // м/с², высота прыжка = v²/(2g) = 1.8 юнита
+    // Куб: высота ≈2.1 юнита, полное время в воздухе ≈1.1 с (g = 2H/t², v = g·t, t = 0.55 с)
+    public float jumpForce = 7.6f;
+    [SerializeField] private float cubeGravity = 13.9f;      // м/с², высота прыжка = v²/(2g) ≈ 2.1 юнита
     public float shipFlyForce = 15f;
     public float shipGravityScale = 2f;
     public float waveGravityScale = 1.5f;
@@ -45,10 +45,21 @@ public float ballFlipForce = 4f;   // начальная скорость при
     [SerializeField] private Sprite cubeModeSprite;
     [SerializeField] private float cubeSpriteRotationSpeed = 360f; // Степень в секунду
     [SerializeField] private float cubeSpriteRotationSmoothness = 10f;
-    // Вращение куба в воздухе: ровно 90° за весь прыжок (от отрыва до приземления), с постоянной скоростью
-    private float CubeSpinSpeed => (jumpForce > 0f && cubeGravity > 0f) ? 90f * cubeGravity / (2f * jumpForce) : 0f;
+    // Вращение куба: ровно 90° за прыжок. Крутится с постоянной скоростью первые cubeSpinFraction
+    // времени полёта (чуть быстрее), затем держит угол до приземления.
+    private float CubeSpinSpeed
+    {
+        get
+        {
+            float airtime = (cubeGravity > 0f) ? 2f * jumpForce / cubeGravity : 0f;
+            float spinTime = airtime * cubeSpinFraction;
+            return spinTime > 0f ? 90f / spinTime : 0f;
+        }
+    }
     private bool cubeWasGrounded = true;                    // для мгновенного округления при касании
+    private float cubeSpunThisJump = 0f;                    // сколько уже довернули за текущий прыжок
     [Header("Geometry Dash feel (куб)")]
+    [SerializeField] private float cubeSpinFraction = 0.8f; // доля времени полёта, за которую куб делает 90°
     [SerializeField] private float cubeMaxFallSpeed = 20f;  // максимальная скорость падения куба
     [SerializeField] private bool holdToJump = false;      // зажатие прыгает само при приземлении (выключено: подозрение на подбросы)
     [SerializeField] private Vector3 cubeSpriteOffset = Vector3.zero;
@@ -572,14 +583,20 @@ private List<PracticeStartPoint> practicePoints = new List<PracticeStartPoint>()
         Transform spin = cubeModeSpriteRenderer.transform;
         if (!isGrounded)
         {
-            // В воздухе — постоянная угловая скорость
-            spin.localRotation *= Quaternion.Euler(0f, 0f, -CubeSpinSpeed * Time.fixedDeltaTime);
+            // В воздухе — постоянная угловая скорость, но не больше 90° за прыжок
+            float step = Mathf.Min(CubeSpinSpeed * Time.fixedDeltaTime, 90f - cubeSpunThisJump);
+            if (step > 0f)
+            {
+                spin.localRotation *= Quaternion.Euler(0f, 0f, -step);
+                cubeSpunThisJump += step;
+            }
         }
         else if (!cubeWasGrounded)
         {
             // Момент касания земли: сразу округляем угол до ближайшего кратного 90°
             float z = spin.localEulerAngles.z;
             spin.localRotation = Quaternion.Euler(0f, 0f, Mathf.Round(z / 90f) * 90f);
+            cubeSpunThisJump = 0f;
         }
         cubeWasGrounded = isGrounded;
     }
@@ -1309,6 +1326,7 @@ public void FlipBallGravity(bool forceGroundCheck = false)
     {
         isGrounded = true;
         cubeWasGrounded = true;
+        cubeSpunThisJump = 0f;
         isJumping = false;
 
         if (rb != null)
