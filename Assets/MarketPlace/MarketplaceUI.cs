@@ -247,6 +247,22 @@ private void OnDetailCloseClicked()
         }
     }
     
+    // Приоритетные уровни (рейтинговые и «Изи демон» и выше) — всегда полностью, в контейнер рейтинговых
+    public void ShowPriorityLevels(List<SupabaseLevelData> levels)
+    {
+        if (ratedLevelsContainer == null) return;
+
+        foreach (Transform child in ratedLevelsContainer) Destroy(child.gameObject);
+        if (levels == null || levelEntryPrefab == null) return;
+
+        foreach (var level in levels)
+        {
+            GameObject entry = Instantiate(levelEntryPrefab, ratedLevelsContainer);
+            MarketplaceLevelEntryUI entryUI = entry.GetComponent<MarketplaceLevelEntryUI>();
+            if (entryUI != null) entryUI.Setup(level, this);
+        }
+    }
+
     // Показать страницу уровней. append = true: добавить в конец без перерисовки всего списка
     public void ShowLevelPage(List<SupabaseLevelData> levels, bool append)
     {
@@ -256,7 +272,6 @@ private void OnDetailCloseClicked()
         {
             allLevels = new List<SupabaseLevelData>(levels);
             ApplyFiltersAndSort();
-            UpdateRatedAndWeeklyLists();
         }
         else
         {

@@ -200,14 +200,42 @@ public class SupabaseManager : MonoBehaviour
     }
 
     // 📄 СТРАНИЦА УРОВНЕЙ (offset/limit), новые сверху
-    public void GetLevelsPage(int offset, int limit, System.Action<List<SupabaseLevelData>> callback)
+    public void GetLevelsPage(int offset, int limit, System.Action<List<SupabaseLevelData>> callback, string filter = null)
     {
-        StartCoroutine(GetLevelsPageCoroutine(offset, limit, callback));
+        StartCoroutine(GetLevelsPageCoroutine(offset, limit, filter, callback));
     }
 
-    private IEnumerator GetLevelsPageCoroutine(int offset, int limit, System.Action<List<SupabaseLevelData>> callback)
+    // Приоритетные уровни: рейтинговые ИЛИ сложность «Изи демон» и выше (difficulty > 5.5, т.е. индекс спрайта >= 5).
+    // Грузятся все, страницами по 1000 (лимит Supabase на один запрос).
+    public void GetPriorityLevels(System.Action<List<SupabaseLevelData>> callback)
     {
-        string url = $"{supabaseUrl}/rest/v1/{levelsTable}?select=*&order=created_at.desc&offset={offset}&limit={limit}";
+        StartCoroutine(GetPriorityLevelsCoroutine(callback));
+    }
+
+    public const string PriorityFilter = "or=(is_rated.eq.true,difficulty.gt.5.5)";
+    public const string RegularFilter = "and=(is_rated.neq.true,difficulty.lte.5.5)";
+
+    private IEnumerator GetPriorityLevelsCoroutine(System.Action<List<SupabaseLevelData>> callback)
+    {
+        var all = new List<SupabaseLevelData>();
+        const int chunk = 1000;
+        int offset = 0;
+        while (true)
+        {
+            List<SupabaseLevelData> part = null;
+            yield return GetLevelsPageCoroutine(offset, chunk, PriorityFilter, (list) => part = list);
+            if (part == null || part.Count == 0) break;
+            all.AddRange(part);
+            if (part.Count < chunk) break;
+            offset += chunk;
+        }
+        callback?.Invoke(all);
+    }
+
+    private IEnumerator GetLevelsPageCoroutine(int offset, int limit, string filter, System.Action<List<SupabaseLevelData>> callback)
+    {
+        string filterPart = string.IsNullOrEmpty(filter) ? "" : "&" + filter;
+        string url = $"{supabaseUrl}/rest/v1/{levelsTable}?select=*{filterPart}&order=created_at.desc&offset={offset}&limit={limit}";
 
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
