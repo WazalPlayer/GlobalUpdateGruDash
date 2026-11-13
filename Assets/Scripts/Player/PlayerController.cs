@@ -918,6 +918,13 @@ else
             coyoteTimer = 0;
         }
 
+        // Шар: зажатие переворачивает гравитацию, пока кнопка держится и шар касается поверхности
+        if (currentMode == PlayerMode.Ball && holdToJump && IsJumpHeld() &&
+            isGrounded && ballFlipTimer <= 0f)
+        {
+            FlipBallGravity(true);
+        }
+
         // Обычная обработка для других режимов
         if (IsJumpPressed())
         {
