@@ -49,7 +49,7 @@ public float ballFlipForce = 4f;   // начальная скорость при
     [SerializeField] private float cubeSpinSpeed = 540f;   // градусов в секунду в воздухе (постоянная)
     private bool cubeWasGrounded = true;                    // для мгновенного округления при касании
     [SerializeField] private float cubeMaxFallSpeed = 20f;  // максимальная скорость падения куба
-    [SerializeField] private bool holdToJump = true;       // зажатие прыгает само при приземлении
+    [SerializeField] private bool holdToJump = false;      // зажатие прыгает само при приземлении (выключено: подозрение на подбросы)
     [SerializeField] private Vector3 cubeSpriteOffset = Vector3.zero;
     [SerializeField] private bool inheritMainSpriteColor = true;
     
