@@ -133,21 +133,47 @@ public static class TextToTmpConverter
 
     // ---------- Этап 1: замена компонентов и запись ссылок ----------
 
+    // Параметры старого Text, которые переносим в TMP
+    private class TextProps
+    {
+        public string text;
+        public int fontSize;
+        public TextAnchor alignment;
+        public bool wrap;
+        public bool richText;
+        public bool raycastTarget;
+        public bool autoSize;
+        public bool maskable;
+        public bool enabled;
+    }
+
     private static int ConvertRoots(GameObject[] roots, Transform stop, string assetPath, TMP_FontAsset font, RefList refs)
     {
         var texts = new List<Text>();
         foreach (GameObject r in roots) texts.AddRange(r.GetComponentsInChildren<Text>(true));
         if (texts.Count == 0) return 0;
 
-        var map = new Dictionary<Text, TextMeshProUGUI>();
+        // 1. Запоминаем параметры и владельцев объекта Text
+        var owners = new Dictionary<Text, GameObject>();
+        var props = new Dictionary<Text, TextProps>();
         foreach (Text t in texts)
         {
-            TextMeshProUGUI n = t.gameObject.AddComponent<TextMeshProUGUI>();
-            CopyProps(t, n, font);
-            map[t] = n;
+            owners[t] = t.gameObject;
+            props[t] = new TextProps
+            {
+                text = t.text,
+                fontSize = t.fontSize,
+                alignment = t.alignment,
+                wrap = t.horizontalOverflow == HorizontalWrapMode.Wrap,
+                richText = t.supportRichText,
+                raycastTarget = t.raycastTarget,
+                autoSize = t.resizeTextForBestFit,
+                maskable = t.maskable,
+                enabled = t.enabled
+            };
         }
 
-        // Записываем все ссылки на старые Text, пока они ещё существуют
+        // 2. Записываем все ссылки на старые Text, пока они существуют
         foreach (GameObject r in roots)
         {
             foreach (Component c in r.GetComponentsInChildren<Component>(true))
@@ -159,7 +185,7 @@ public static class TextToTmpConverter
                 {
                     if (it.propertyType != SerializedPropertyType.ObjectReference) continue;
                     Text target = it.objectReferenceValue as Text;
-                    if (target == null || !map.ContainsKey(target)) continue;
+                    if (target == null || !props.ContainsKey(target)) continue;
 
                     refs.items.Add(new RefEntry
                     {
@@ -173,24 +199,34 @@ public static class TextToTmpConverter
             }
         }
 
+        // 3. Удаляем старый Text (иначе на объекте два Graphic и TMP не добавится)
         foreach (Text t in texts) UnityEngine.Object.DestroyImmediate(t);
+
+        // 4. Добавляем TextMeshProUGUI с теми же параметрами
+        foreach (Text t in texts)
+        {
+            GameObject go = owners[t];
+            TextProps p = props[t];
+            TextMeshProUGUI n = go.AddComponent<TextMeshProUGUI>();
+            ApplyProps(p, n, font);
+        }
         return texts.Count;
     }
 
-    private static void CopyProps(Text t, TextMeshProUGUI n, TMP_FontAsset font)
+    private static void ApplyProps(TextProps p, TextMeshProUGUI n, TMP_FontAsset font)
     {
         n.font = font;
-        n.text = t.text;
-        n.fontSize = t.fontSize;
+        n.text = p.text;
+        n.fontSize = p.fontSize;
         n.color = Color.white;
-        n.alignment = MapAlignment(t.alignment);
-        n.enableWordWrapping = t.horizontalOverflow == HorizontalWrapMode.Wrap;
-        n.richText = t.supportRichText;
-        n.raycastTarget = t.raycastTarget;
+        n.alignment = MapAlignment(p.alignment);
+        n.enableWordWrapping = p.wrap;
+        n.richText = p.richText;
+        n.raycastTarget = p.raycastTarget;
         n.fontStyle = FontStyles.Normal;
-        n.enableAutoSizing = t.resizeTextForBestFit;
-        n.maskable = t.maskable;
-        n.enabled = t.enabled;
+        n.enableAutoSizing = p.autoSize;
+        n.maskable = p.maskable;
+        n.enabled = p.enabled;
     }
 
     private static TextAlignmentOptions MapAlignment(TextAnchor a)
