@@ -17,13 +17,13 @@ public class MarketplacePager : MonoBehaviour
     public Text pageText;
 
     [Tooltip("Уровней на одной странице")]
-    public int pageSize = 50;
+    public int pageSize = 25;
 
-    [Tooltip("Сколько уровней догружать в фоне автоматически, дальше — только при прокрутке")]
+    [Tooltip("Сразу после запуска догружаются уровни до этого количества (потом — по страницам при прокрутке)")]
     public int autoLoadLimit = 10000;
 
-    [Tooltip("Пауза между фоновыми страницами, секунд")]
-    public float prefetchDelay = 0.25f;
+    [Tooltip("Пауза между фоновыми страницами, секунд (0 = подряд)")]
+    public float prefetchDelay = 0f;
 
     [Tooltip("Через сколько секунд повторять запрос, если сервер не ответил")]
     public float retryDelay = 10f;

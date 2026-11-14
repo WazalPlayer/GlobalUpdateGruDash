@@ -3,16 +3,42 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Создаёт на выбранной панели Market строку страниц: кнопки «Назад» / «Дальше» (стрелки из UI/Market/arrow.png)
-// и подпись страницы. Объекты обычные, их можно двигать в Unity.
-// Запуск: выделите панель Market в Hierarchy, затем Tools > Market > Add Page Buttons
+// Добавляет строку страниц («Назад» / «Дальше» + подпись) в маркет.
+// Два варианта:
+//  - Tools > Market > Add Page Buttons to MarketPrefab — меняет сам префаб маркета,
+//    поэтому кнопки появятся во всех сценах, где стоит маркет. Рекомендуется.
+//  - Tools > Market > Add Page Buttons to Open Scene — только открытая сцена.
 public static class MarketPagerBuilder
 {
     private const string ArrowPath = "Assets/UI/Market/arrow.png";
+    private const string MarketPrefabPath = "Assets/Scripts/MarketPrefab.prefab";
+    private const int PageSize = 25;
 
-    // Сам находит MarketplaceUI в открытой сцене и его панель, выделять ничего не нужно
-    [MenuItem("Tools/Market/Add Page Buttons")]
-    public static void Build()
+    [MenuItem("Tools/Market/Add Page Buttons to MarketPrefab")]
+    public static void BuildOnPrefab()
+    {
+        GameObject root = PrefabUtility.LoadPrefabContents(MarketPrefabPath);
+        if (root == null)
+        {
+            EditorUtility.DisplayDialog("Маркет", "Не найден префаб " + MarketPrefabPath, "OK");
+            return;
+        }
+
+        try
+        {
+            if (!AddPager(root, "префаб " + MarketPrefabPath)) return;
+            PrefabUtility.SaveAsPrefabAsset(root, MarketPrefabPath);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[MarketPagerBuilder] Кнопки страниц добавлены в префаб маркета. Они появятся во всех сценах с маркетом.");
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(root);
+        }
+    }
+
+    [MenuItem("Tools/Market/Add Page Buttons to Open Scene")]
+    public static void BuildOnScene()
     {
         MarketplaceUI marketUI = Object.FindObjectOfType<MarketplaceUI>(true);
         if (marketUI == null)
@@ -21,8 +47,23 @@ public static class MarketPagerBuilder
             return;
         }
 
-        GameObject panel = marketUI.marketplacePanel != null ? marketUI.marketplacePanel : marketUI.gameObject;
+        if (!AddPager(marketUI.gameObject, "сцена " + marketUI.gameObject.scene.name)) return;
+        EditorSceneManager.MarkSceneDirty(marketUI.gameObject.scene);
+        EditorSceneManager.SaveScene(marketUI.gameObject.scene);
+        Debug.Log("[MarketPagerBuilder] Кнопки страниц добавлены в сцену и сохранены.");
+    }
 
+    // Добавляет строку страниц внутрь root (префаб или объект сцены с MarketplaceUI)
+    private static bool AddPager(GameObject root, string where)
+    {
+        MarketplaceUI marketUI = root.GetComponentInChildren<MarketplaceUI>(true);
+        if (marketUI == null)
+        {
+            EditorUtility.DisplayDialog("Маркет", "Не найден MarketplaceUI: " + where, "OK");
+            return false;
+        }
+
+        GameObject panel = marketUI.gameObject;
         Sprite arrow = PrepareArrow();
 
         Transform old = panel.transform.Find("PagerBar");
@@ -32,7 +73,7 @@ public static class MarketPagerBuilder
         bar.transform.SetParent(panel.transform, false);
         SetRect(bar.GetComponent<RectTransform>(), 0.05f, 0.02f, 0.95f, 0.11f);
 
-        // «Назад» — та же стрелка, отзеркаленная по горизонтали
+        // «Назад» — стрелка, отзеркаленная по горизонтали
         Button prev = CreateArrowButton("PrevPageButton", bar.transform, arrow, mirrored: true);
         SetRect(prev.GetComponent<RectTransform>(), 0f, 0f, 0.2f, 1f);
 
@@ -42,21 +83,21 @@ public static class MarketPagerBuilder
         Button next = CreateArrowButton("NextPageButton", bar.transform, arrow, mirrored: false);
         SetRect(next.GetComponent<RectTransform>(), 0.8f, 0f, 1f, 1f);
 
-        // Компонент пейджера на панели
         MarketplacePager pager = panel.GetComponent<MarketplacePager>();
-        if (pager == null) pager = Undo.AddComponent<MarketplacePager>(panel);
+        if (pager == null) pager = panel.AddComponent<MarketplacePager>();
         pager.marketUI = marketUI;
         pager.prevButton = prev;
         pager.nextButton = next;
         pager.pageText = pageText;
+        pager.pageSize = PageSize;
+        pager.autoLoadLimit = 10000;
+        pager.prefetchDelay = 0f;
         pager.levelsScroll = marketUI.levelsContainer != null
             ? marketUI.levelsContainer.GetComponentInParent<ScrollRect>(true)
             : null;
 
         EditorUtility.SetDirty(pager);
-        EditorSceneManager.MarkSceneDirty(panel.scene);
-        EditorSceneManager.SaveScene(panel.scene);
-        Debug.Log("[MarketPagerBuilder] Кнопки страниц добавлены на " + panel.name + " и сохранены.");
+        return true;
     }
 
     private static Sprite PrepareArrow()
