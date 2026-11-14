@@ -239,7 +239,8 @@ public class SupabaseManager : MonoBehaviour
     private IEnumerator GetLevelsPageCoroutine(int offset, int limit, string filter, System.Action<List<SupabaseLevelData>> callback)
     {
         string filterPart = string.IsNullOrEmpty(filter) ? "" : "&" + filter;
-        string url = $"{supabaseUrl}/rest/v1/{levelsTable}?select=*{filterPart}&order=created_at.desc&offset={offset}&limit={limit}";
+        // Сначала популярные (по лайкам), при равенстве — новые
+        string url = $"{supabaseUrl}/rest/v1/{levelsTable}?select=*{filterPart}&order=likes.desc.nullslast,created_at.desc&offset={offset}&limit={limit}";
 
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
