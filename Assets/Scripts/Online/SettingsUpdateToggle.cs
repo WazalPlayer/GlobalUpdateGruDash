@@ -1,13 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Строка в настройках: переключатель «Автообновление» и номер версии.
-// Объекты создаёт редакторный инструмент Tools > Online > Add Update Settings (на выбранную панель).
+// Блок «Обновления» в настройках: переключатель автопроверки, номер версии,
+// кнопка «Проверить» и кнопка «Скачать», когда есть новая версия.
+// Объекты создаёт Tools > Online > Add Update Settings to Selected Panel.
 public class SettingsUpdateToggle : MonoBehaviour
 {
     public Toggle autoUpdateToggle;
     public Text versionText;
     public Text updateInfoText;
+    public Button checkButton;
+    public Button downloadButton;
+
+    private string downloadUrl;
 
     private void OnEnable()
     {
@@ -21,12 +26,27 @@ public class SettingsUpdateToggle : MonoBehaviour
         if (versionText != null)
             versionText.text = "Версия: " + UpdateChecker.CurrentVersion;
 
+        if (checkButton != null)
+        {
+            checkButton.onClick.RemoveListener(OnCheckClicked);
+            checkButton.onClick.AddListener(OnCheckClicked);
+        }
+
+        if (downloadButton != null)
+        {
+            downloadButton.onClick.RemoveListener(OnDownloadClicked);
+            downloadButton.onClick.AddListener(OnDownloadClicked);
+            downloadButton.gameObject.SetActive(false);
+        }
+
         if (UpdateChecker.Instance != null)
         {
             UpdateChecker.Instance.OnUpdateAvailable += ShowUpdate;
             UpdateChecker.Instance.OnError += ShowError;
             if (UpdateChecker.Instance.Latest != null)
                 ShowUpdate(UpdateChecker.Instance.Latest);
+            else
+                SetInfo(UpdateChecker.IsEnabled ? "Проверяем обновления..." : "Автопроверка выключена");
         }
     }
 
@@ -39,15 +59,34 @@ public class SettingsUpdateToggle : MonoBehaviour
         }
     }
 
+    // Переключатель: включает или выключает автопроверку при запуске
     private void OnToggleChanged(bool value)
     {
         UpdateChecker.IsEnabled = value;
+        SetInfo(value ? "Автопроверка включена" : "Автопроверка выключена");
         if (value && UpdateChecker.Instance != null) UpdateChecker.Instance.Check();
+    }
+
+    private void OnCheckClicked()
+    {
+        if (UpdateChecker.Instance == null) { SetInfo("Сервис обновлений не запущен"); return; }
+        SetInfo("Проверяем...");
+        UpdateChecker.Instance.Check();
+    }
+
+    // Открывает страницу с новой версией (скачивание/установка делает пользователь)
+    private void OnDownloadClicked()
+    {
+        if (!string.IsNullOrEmpty(downloadUrl)) Application.OpenURL(downloadUrl);
     }
 
     private void ShowUpdate(UpdateChecker.UpdateManifest manifest)
     {
-        SetInfo("Доступна версия " + manifest.version);
+        downloadUrl = manifest.url;
+        bool hasUrl = !string.IsNullOrEmpty(manifest.url);
+        if (downloadButton != null) downloadButton.gameObject.SetActive(hasUrl);
+        string notes = string.IsNullOrEmpty(manifest.notes) ? "" : "\n" + manifest.notes;
+        SetInfo("Доступна версия " + manifest.version + notes);
     }
 
     private void ShowError(string message)
