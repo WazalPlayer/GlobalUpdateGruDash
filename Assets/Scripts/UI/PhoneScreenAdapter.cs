@@ -25,7 +25,8 @@ public static class PhoneScreenAdapter
             return;
 
         float aspect = Screen.height > 0 ? (float)Screen.width / Screen.height : 1f;
-        float match = aspect >= 1f ? 0.5f : 0f; // телефон: вертикально по ширине, горизонтально — компромисс
+        // Референс квадратный (1000x1000): масштабируем по меньшей стороне экрана, чтобы UI не вылезал за край
+        float match = aspect >= 1f ? 1f : 0f; // горизонтально — по высоте, вертикально — по ширине
 
         CanvasScaler[] scalers = Object.FindObjectsOfType<CanvasScaler>(true);
         foreach (CanvasScaler scaler in scalers)
