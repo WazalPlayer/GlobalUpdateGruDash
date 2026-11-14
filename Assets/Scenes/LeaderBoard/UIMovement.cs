@@ -9,10 +9,17 @@ public class UIMovement : MonoBehaviour
     [SerializeField] private float moveDuration = 0.5f; // Длительность движения
     [SerializeField] private RectTransform objectToMove; // Объект для движения
     
+    [Header("Границы списка (для выбора сложности/уровней)")]
+    [Tooltip("Сколько пунктов в списке. 0 = взять количество дочерних объектов у objectToMove")]
+    [SerializeField] private int itemCount = 0;
+
     private Vector2 startPosition;
     private Vector2 targetPosition;
     private Coroutine movementCoroutine;
     private bool isMoving = false;
+    private int currentIndex = 0;
+
+    private int ItemCount => itemCount > 0 ? itemCount : (objectToMove != null ? objectToMove.childCount : 0);
 
     void Start()
     {
@@ -20,23 +27,31 @@ public class UIMovement : MonoBehaviour
         startPosition = objectToMove.anchoredPosition;
     }
 
-    // Метод для движения вперед
+    // Вперёд: нельзя дальше последнего пункта
     public void MoveForward()
     {
         if (isMoving) return;
-        
+        if (currentIndex >= ItemCount - 1) return;
+
+        currentIndex++;
         Vector2 newPosition = objectToMove.anchoredPosition + Vector2.right * moveDistance;
         StartMovement(newPosition);
     }
 
-    // Метод для движения назад
+    // Назад: нельзя левее первого пункта
     public void MoveBackward()
     {
         if (isMoving) return;
-        
+        if (currentIndex <= 0) return;
+
+        currentIndex--;
         Vector2 newPosition = objectToMove.anchoredPosition + Vector2.left * moveDistance;
         StartMovement(newPosition);
     }
+
+    // Можно ли сейчас листать вперёд/назад (для скрытия/гашения кнопок)
+    public bool CanMoveForward => !isMoving && currentIndex < ItemCount - 1;
+    public bool CanMoveBackward => !isMoving && currentIndex > 0;
 
     // Метод для движения вверх
     public void MoveUp()
@@ -60,6 +75,7 @@ public class UIMovement : MonoBehaviour
     public void ResetPosition()
     {
         if (isMoving) return;
+        currentIndex = 0;
         StartMovement(startPosition);
     }
 
