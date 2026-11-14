@@ -95,6 +95,8 @@ public static class MarketPagerBuilder
         }
 
         GameObject panel = marketUI.gameObject;
+        // Убираем старый компонент MarketplacePager (его скрипт удалён, остаётся «Missing»)
+        GameObjectUtility.RemoveMonoBehavioursWithMissingScript(panel);
         Sprite arrow = PrepareArrow();
 
         Transform old = panel.transform.Find("PagerBar");
@@ -114,20 +116,14 @@ public static class MarketPagerBuilder
         Button next = CreateArrowButton("NextPageButton", bar.transform, arrow, mirrored: false);
         SetRect(next.GetComponent<RectTransform>(), 0.8f, 0f, 1f, 1f);
 
-        MarketplacePager pager = panel.GetComponent<MarketplacePager>();
-        if (pager == null) pager = panel.AddComponent<MarketplacePager>();
-        pager.marketUI = marketUI;
-        pager.prevButton = prev;
-        pager.nextButton = next;
-        pager.pageText = pageText;
-        pager.pageSize = PageSize;
-        pager.autoLoadLimit = 10000;
-        pager.prefetchDelay = 0f;
-        pager.levelsScroll = marketUI.levelsContainer != null
-            ? marketUI.levelsContainer.GetComponentInParent<ScrollRect>(true)
-            : null;
-
-        EditorUtility.SetDirty(pager);
+        // Функционал страниц теперь внутри MarketplaceUI
+        marketUI.prevPageButton = prev;
+        marketUI.nextPageButton = next;
+        marketUI.pageText = pageText;
+        marketUI.pageSize = PageSize;
+        marketUI.autoLoadLimit = 10000;
+        marketUI.prefetchDelay = 0f;
+        EditorUtility.SetDirty(marketUI);
         return true;
     }
 
