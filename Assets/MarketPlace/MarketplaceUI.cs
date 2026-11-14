@@ -55,10 +55,7 @@ public Button detailCloseButton;
     public float retryDelay = 10f;      // повтор запроса, если сервер не отвечает
 
     private ScrollRect levelsScroll;
-    private int page = 0;               // текущая страница для кнопок
-    private int loadedPages = 0;        // сколько страниц основного списка загружено
-    private bool hasMore = true;
-    private bool pagingLoading = false;
+    private int page = 0;               // текущая страница
 
     private List<SupabaseLevelData> allLevels = new List<SupabaseLevelData>();
     private List<SupabaseLevelData> filteredLevels = new List<SupabaseLevelData>();
@@ -107,100 +104,121 @@ public Button detailCloseButton;
         StartCoroutine(StartupRoutine());
     }
 
-    void Update()
-    {
-        // Подгрузка при прокрутке до конца списка
-        if (levelsScroll == null || pagingLoading || !hasMore || loadedPages == 0) return;
-        if (levelsScroll.verticalNormalizedPosition <= scrollThreshold)
-            StartCoroutine(AppendRoutine());
-    }
+    // ---------- Страницы: на экране максимум pageSize (25) уровней, остальные в кэше ----------
 
-    // ---------- Страницы и загрузка уровней ----------
+    private const int FetchChunk = 100;                       // сколько уровней тянем за один запрос
+    private readonly List<SupabaseLevelData> regularCache = new List<SupabaseLevelData>();
+    private bool serverEnded = false;                         // сервер отдал все обычные уровни
+    private bool fetching = false;                            // идёт запрос к серверу
+    private bool navRunning = false;                          // идёт показ страницы
+    private int desiredPage = 0;                              // куда нажали последний раз
 
-    // Старт и обновление: очистить список, загрузить приоритетные, затем первую страницу и фоновую догрузку
+    // Старт и обновление: приоритетные уровни, первая страница, фоновый кэш до autoLoadLimit
     private IEnumerator StartupRoutine()
     {
-        pagingLoading = true;
-        SetPagingButtons();
+        regularCache.Clear();
+        serverEnded = false;
+        page = 0;
+        desiredPage = 0;
         allLevels.Clear();
-        loadedPages = 0;
+        SetPagingButtons();
 
-        // 1. Приоритетные: рейтинговые и «Изи демон» и выше — все сразу
+        // 1. Приоритетные (рейтинговые и «Изи демон» и выше) — все сразу
         List<SupabaseLevelData> priority = null;
         yield return FetchWithRetry(
             done => SupabaseManager.Instance.GetPriorityLevels(done),
             list => priority = list);
         ShowPriorityLevels(priority);
 
-        // 2. Первая страница основного списка
-        pagingLoading = false;
-        yield return ReplaceRoutine(0);
+        // 2. Первая страница на экран
+        yield return NavigateRoutine(0);
 
-        // 3. Фоновая догрузка подряд до autoLoadLimit
-        while (hasMore && loadedPages * pageSize < autoLoadLimit)
+        // 3. Фоновый кэш до autoLoadLimit: экран не меняется, кнопки не блокируются
+        while (!serverEnded && regularCache.Count < autoLoadLimit)
         {
+            yield return FetchChunkRoutine();
             if (prefetchDelay > 0f) yield return new WaitForSeconds(prefetchDelay);
-            else yield return null;
-            if (pagingLoading) continue;
-            yield return AppendRoutine();
         }
     }
 
+    // Загрузить следующий кусок обычных уровней в кэш (запросы идут по очереди)
+    private IEnumerator FetchChunkRoutine()
+    {
+        while (fetching) yield return null;
+        if (serverEnded) yield break;
+
+        fetching = true;
+        SetPagingButtons();
+        int offset = regularCache.Count;
+        List<SupabaseLevelData> part = null;
+        yield return FetchWithRetry(
+            done => SupabaseManager.Instance.GetLevelsPage(offset, FetchChunk, done, SupabaseManager.RegularFilter),
+            list => part = list);
+
+        regularCache.AddRange(part);
+        if (part.Count < FetchChunk) serverEnded = true;
+        fetching = false;
+        SetPagingButtons();
+    }
+
+    // Кнопки всегда активны (их не блокирует загрузка); нажатие запоминается и выполняется
     public void NextPage()
     {
-        if (pagingLoading || !hasMore) return;
-        StartCoroutine(ReplaceRoutine(page + 1));
+        GoToPage(page + 1);
     }
 
     public void PrevPage()
     {
-        if (pagingLoading || page <= 0) return;
-        StartCoroutine(ReplaceRoutine(page - 1));
+        GoToPage(page - 1);
     }
 
-    // Заменить список страницей p
-    private IEnumerator ReplaceRoutine(int p)
+    private void GoToPage(int p)
     {
-        pagingLoading = true;
+        if (p < 0) return;
+        desiredPage = p;
+        if (!navRunning) StartCoroutine(NavigateRoutine(p));
+    }
+
+    // Показывает страницу. Если во время загрузки нажали ещё раз — переходит на последнюю запрошенную
+    private IEnumerator NavigateRoutine(int startPage)
+    {
+        navRunning = true;
+        desiredPage = startPage;
+
+        while (true)
+        {
+            int target = desiredPage;
+
+            // Догружаем кэш до нужной страницы (если сервер ещё не закончился)
+            while (regularCache.Count < (target + 1) * pageSize && !serverEnded)
+                yield return FetchChunkRoutine();
+
+            if (target > 0 && target * pageSize >= regularCache.Count)
+            {
+                // Такой страницы нет — остаёмся на текущей
+                if (desiredPage == target) desiredPage = page;
+            }
+            else
+            {
+                ShowSlice(target);
+            }
+
+            if (desiredPage == page) break;
+        }
+
+        navRunning = false;
         SetPagingButtons();
+    }
 
-        List<SupabaseLevelData> levels = null;
-        yield return FetchWithRetry(
-            done => SupabaseManager.Instance.GetLevelsPage(p * pageSize, pageSize + 1, done, SupabaseManager.RegularFilter),
-            list => levels = list);
-
-        hasMore = levels.Count > pageSize;
-        if (hasMore) levels.RemoveRange(pageSize, levels.Count - pageSize);
-
+    // На экране — не больше pageSize карточек (старые заменяются новыми)
+    private void ShowSlice(int p)
+    {
         page = p;
-        loadedPages = p + 1;
-        ShowLevelPage(levels, false);
+        int from = p * pageSize;
+        int count = Mathf.Max(0, Mathf.Min(pageSize, regularCache.Count - from));
+        List<SupabaseLevelData> slice = regularCache.GetRange(from, count);
+        ShowLevelPage(slice, false);
         if (levelsScroll != null) levelsScroll.verticalNormalizedPosition = 1f;
-
-        pagingLoading = false;
-        SetPagingButtons();
-    }
-
-    // Добавить следующую страницу в конец
-    private IEnumerator AppendRoutine()
-    {
-        if (pagingLoading || !hasMore) yield break;
-        pagingLoading = true;
-        SetPagingButtons();
-
-        int p = loadedPages;
-        List<SupabaseLevelData> levels = null;
-        yield return FetchWithRetry(
-            done => SupabaseManager.Instance.GetLevelsPage(p * pageSize, pageSize + 1, done, SupabaseManager.RegularFilter),
-            list => levels = list);
-
-        hasMore = levels.Count > pageSize;
-        if (hasMore) levels.RemoveRange(pageSize, levels.Count - pageSize);
-
-        loadedPages = p + 1;
-        ShowLevelPage(levels, true);
-
-        pagingLoading = false;
         SetPagingButtons();
     }
 
@@ -233,10 +251,17 @@ public Button detailCloseButton;
 
     private void SetPagingButtons()
     {
-        if (prevPageButton != null) prevPageButton.interactable = !pagingLoading && page > 0;
-        if (nextPageButton != null) nextPageButton.interactable = !pagingLoading && hasMore;
-        if (pageText != null) pageText.text = $"Страница {page + 1}";
+        // «Назад» доступна на любой странице после первой
+        if (prevPageButton != null) prevPageButton.interactable = page > 0;
+
+        // «Дальше» не гаснет при загрузке. Гаснет только если уровней дальше точно нет
+        bool noMore = serverEnded && (page + 1) * pageSize >= regularCache.Count;
+        if (nextPageButton != null) nextPageButton.interactable = !noMore;
+
+        if (pageText != null)
+            pageText.text = fetching ? $"Страница {page + 1} (загрузка...)" : $"Страница {page + 1}";
     }
+
     
 
     private void CopyLevelIdToClipboard()
@@ -391,6 +416,8 @@ private void OnDetailCloseClicked()
     {
         SetStatus("Загрузка уровней...");
         StopAllCoroutines();
+        fetching = false;   // сбрасываем флаги, иначе после остановки корутин загрузка зависнет
+        navRunning = false;
         StartCoroutine(StartupRoutine());
     }
     
