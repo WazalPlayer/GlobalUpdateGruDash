@@ -224,7 +224,10 @@ public static class TextToTmpConverter
         n.richText = p.richText;
         n.raycastTarget = p.raycastTarget;
         n.fontStyle = FontStyles.Normal;
-        n.enableAutoSizing = p.autoSize;
+        // AutoSize: текст подгоняется под размер объекта, исходный размер — максимум
+        n.enableAutoSizing = true;
+        n.fontSizeMin = Mathf.Min(10f, p.fontSize);
+        n.fontSizeMax = p.fontSize;
         n.maskable = p.maskable;
         n.enabled = p.enabled;
     }
