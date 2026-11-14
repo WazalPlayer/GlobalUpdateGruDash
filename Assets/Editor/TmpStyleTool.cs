@@ -117,11 +117,12 @@ public static class TmpStyleTool
         Backup backup = LoadOrNewBackup();
         if (!backup.hasMaterial) SaveMaterialBackup(backup, font);
 
+        problems.Clear();
         int total = 0;
         if (!allProject)
         {
             Scene scene = EditorSceneManager.GetActiveScene();
-            total += ApplyToHierarchy(null, font, scene.path, backup);
+            total += ApplyChecked(null, font, scene.path, backup);
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
         }
@@ -131,7 +132,7 @@ public static class TmpStyleTool
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
                 var scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
-                int n = ApplyToHierarchy(null, font, path, backup);
+                int n = ApplyChecked(null, font, path, backup);
                 if (n > 0)
                 {
                     EditorSceneManager.MarkSceneDirty(scene);
@@ -145,7 +146,7 @@ public static class TmpStyleTool
                 GameObject root = PrefabUtility.LoadPrefabContents(path);
                 try
                 {
-                    int n = ApplyToHierarchy(root, font, path, backup);
+                    int n = ApplyChecked(root, font, path, backup);
                     if (n > 0) PrefabUtility.SaveAsPrefabAsset(root, path);
                     total += n;
                 }
@@ -154,6 +155,10 @@ public static class TmpStyleTool
         }
 
         File.WriteAllText(BackupPath, JsonUtility.ToJson(backup, true));
+        if (problems.Count == 0)
+            Debug.Log("[TmpStyleTool] Проверка пройдена: количество компонентов не изменилось.");
+        else
+            foreach (string p in problems) Debug.LogError("[TmpStyleTool] ПРОВЕРКА: " + p);
         AssetDatabase.SaveAssets();
         Debug.Log($"[TmpStyleTool] Стиль применён к {total} TMP-текстам. Откат: Tools → UI → Revert TMP Style.");
     }
@@ -218,6 +223,28 @@ public static class TmpStyleTool
             if (old != null) return old;
         }
         return new Backup();
+    }
+
+    private static readonly List<string> problems = new List<string>();
+
+    // Считает компоненты до и после применения: если число изменилось, это попадёт в список проблем
+    private static int ApplyChecked(GameObject root, TMP_FontAsset font, string assetPath, Backup backup)
+    {
+        GameObject[] roots = root != null
+            ? new GameObject[] { root }
+            : SceneManager.GetActiveScene().GetRootGameObjects();
+        int before = CountComponents(roots);
+        int n = ApplyToHierarchy(root, font, assetPath, backup);
+        int after = CountComponents(roots);
+        if (before != after) problems.Add(assetPath + ": компонентов было " + before + ", стало " + after);
+        return n;
+    }
+
+    private static int CountComponents(GameObject[] roots)
+    {
+        int count = 0;
+        foreach (GameObject r in roots) count += r.GetComponentsInChildren<Component>(true).Length;
+        return count;
     }
 
     private static int ApplyToHierarchy(GameObject root, TMP_FontAsset font, string assetPath, Backup backup)
