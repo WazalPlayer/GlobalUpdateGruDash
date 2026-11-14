@@ -126,3 +126,13 @@ begin
   end if;
   delete from clans where leader_id = p_player;
 end $$;
+
+-- Статистика клана: участники и сумма звёзд всех участников (для топа и карточки клана)
+create or replace view clan_stats as
+select c.id as clan_id, c.name, c.tag, c.join_type, c.leader_id, c.member_limit,
+       count(m.player_id) as members,
+       coalesce(sum(a.stars), 0) as total_stars
+from clans c
+left join clan_members m on m.clan_id = c.id
+left join accounts a on a.player_id = m.player_id
+group by c.id;

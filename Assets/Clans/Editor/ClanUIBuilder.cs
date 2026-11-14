@@ -5,16 +5,18 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-// Меню клана на сцене: кнопка в ButtonsMassive + панель с вкладками
-// «Клан», «Участники», «Чат», «Топ кланов». Всё — обычные объекты, их можно двигать в Unity.
+// Меню клана на сцене: кнопка в ButtonsMassive и панель с вкладками
+// «Клан», «Участники», «Заявки», «Чат», «Топ кланов», предпросмотр клана и профиль.
+// Всё — обычные объекты, их можно двигать и оформлять в Unity.
 // Запуск: Tools > Clans > Build Clan Menu in Open Scene
 public static class ClanUIBuilder
 {
     private const string IconPath = "Assets/Clans/Art/clans_icon.png";
     private static readonly Color Green = new Color(0.45f, 0.85f, 0.2f, 1f);
-    private static readonly Color DarkGreen = new Color(0.25f, 0.6f, 0.1f, 1f);
+    private static readonly Color Red = new Color(0.8f, 0.3f, 0.2f, 1f);
     private static readonly Color PanelBg = new Color(0.04f, 0.1f, 0.2f, 0.96f);
     private static readonly Color TabOff = new Color(0.12f, 0.25f, 0.4f, 1f);
+    private static readonly Color ProfileBg = new Color(0.02f, 0.05f, 0.12f, 0.98f);
 
     [MenuItem("Tools/Clans/Build Clan Menu in Open Scene")]
     public static void Build()
@@ -80,53 +82,56 @@ public static class ClanUIBuilder
         SetRect(status.rectTransform, 0.02f, 0.01f, 0.98f, 0.05f);
 
         // 3. Вкладки
-        string[] tabNames = { "Клан", "Участники", "Чат", "Топ кланов" };
+        string[] tabNames = { "Клан", "Участники", "Заявки", "Чат", "Топ кланов" };
         GameObject tabBar = Img("TabBar", panel.transform, new Color(0, 0, 0, 0));
         SetRect(tabBar.GetComponent<RectTransform>(), 0.02f, 0.85f, 0.98f, 0.92f);
         Button[] tabs = new Button[tabNames.Length];
         for (int i = 0; i < tabNames.Length; i++)
         {
-            tabs[i] = Btn("Tab_" + tabNames[i], tabBar.transform, tabNames[i], TabOff);
-            float x0 = i / (float)tabNames.Length + 0.005f;
-            float x1 = (i + 1) / (float)tabNames.Length - 0.005f;
+            tabs[i] = Btn("Tab_" + tabNames[i].Replace(" ", ""), tabBar.transform, tabNames[i], TabOff);
+            float x0 = i / (float)tabNames.Length + 0.004f;
+            float x1 = (i + 1) / (float)tabNames.Length - 0.004f;
             SetRect(tabs[i].GetComponent<RectTransform>(), x0, 0f, x1, 1f);
         }
 
-        // Строка-шаблон (выключена): текст + кнопка
+        // 4. Шаблон строки (выключен): текст и три кнопки
         GameObject rowTemplate = new GameObject("RowTemplate", typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
         rowTemplate.transform.SetParent(panel.transform, false);
         rowTemplate.GetComponent<Image>().color = new Color(0, 0, 0, 0.3f);
         rowTemplate.GetComponent<LayoutElement>().preferredHeight = 80;
         HorizontalLayoutGroup hl = rowTemplate.GetComponent<HorizontalLayoutGroup>();
         hl.childControlWidth = true; hl.childControlHeight = true; hl.childForceExpandWidth = false;
-        hl.padding = new RectOffset(10, 10, 6, 6); hl.spacing = 10;
-        Text rowText = Txt("RowText", rowTemplate.transform, "Строка", 28, TextAnchor.MiddleLeft);
+        hl.padding = new RectOffset(10, 10, 6, 6); hl.spacing = 8;
+        Text rowText = Txt("RowText", rowTemplate.transform, "Строка", 26, TextAnchor.MiddleLeft);
         rowText.gameObject.AddComponent<LayoutElement>().flexibleWidth = 1;
-        Button rowBtn = Btn("RowButton", rowTemplate.transform, "Действие", Green);
-        rowBtn.gameObject.AddComponent<LayoutElement>().preferredWidth = 220;
+        for (int i = 1; i <= 3; i++)
+        {
+            Button rb = Btn("RowButton" + i, rowTemplate.transform, "Действие", Green);
+            rb.gameObject.AddComponent<LayoutElement>().preferredWidth = 170;
+        }
         rowTemplate.SetActive(false);
 
         const float pageX0 = 0.03f, pageY0 = 0.04f, pageX1 = 0.97f, pageY1 = 0.83f;
 
-        // 4. Страница «Клан»: два состояния — есть клан / нет клана
-        GameObject pageClan = Img("PageClan", panel.transform, new Color(0, 0, 0, 0));
+        // 5. Вкладка «Клан»: есть клан / нет клана
+        GameObject pageClan = Img("Page_Clan", panel.transform, new Color(0, 0, 0, 0));
         SetRect(pageClan.GetComponent<RectTransform>(), pageX0, pageY0, pageX1, pageY1);
 
         GameObject myArea = Img("MyClanArea", pageClan.transform, new Color(0, 0, 0, 0.2f));
         SetStretch(myArea.GetComponent<RectTransform>(), 0, 0, 1, 1);
-        Text info = Txt("ClanInfoText", myArea.transform, "", 34, TextAnchor.UpperLeft);
+        Text info = Txt("ClanInfoText", myArea.transform, "", 32, TextAnchor.UpperLeft);
         SetRect(info.rectTransform, 0.03f, 0.6f, 0.97f, 0.98f);
         Button joinType = Btn("JoinTypeButton", myArea.transform, "открыто", Green);
         SetRect(joinType.GetComponent<RectTransform>(), 0.03f, 0.42f, 0.5f, 0.56f);
-        Button leave = Btn("LeaveButton", myArea.transform, "Выйти из клана", new Color(0.8f, 0.3f, 0.2f));
+        Button leave = Btn("LeaveButton", myArea.transform, "Выйти из клана", Red);
         SetRect(leave.GetComponent<RectTransform>(), 0.52f, 0.42f, 0.97f, 0.56f);
-        Text joinHint = Txt("JoinHintText", myArea.transform, "Тип вступления меняет только лидер. Лимит клана: 50 участников.", 26, TextAnchor.UpperLeft);
-        joinHint.color = new Color(0.8f, 0.9f, 1f);
-        SetRect(joinHint.rectTransform, 0.03f, 0.25f, 0.97f, 0.4f);
+        Text hint = Txt("JoinHintText", myArea.transform, "Тип вступления меняет лидер. Лимит клана: 50 участников. Распуск — двойное нажатие.", 24, TextAnchor.UpperLeft);
+        hint.color = new Color(0.8f, 0.9f, 1f);
+        SetRect(hint.rectTransform, 0.03f, 0.25f, 0.97f, 0.4f);
 
         GameObject noArea = Img("NoClanArea", pageClan.transform, new Color(0, 0, 0, 0.2f));
         SetStretch(noArea.GetComponent<RectTransform>(), 0, 0, 1, 1);
-        Text createHint = Txt("CreateHintText", noArea.transform, "Вы не в клане. Создание клана бесплатно.", 30, TextAnchor.UpperLeft);
+        Text createHint = Txt("CreateHintText", noArea.transform, "Вы не в клане. Создание клана бесплатно.", 28, TextAnchor.UpperLeft);
         SetRect(createHint.rectTransform, 0.03f, 0.82f, 0.97f, 0.98f);
         InputField nameIn = Input("ClanNameInput", noArea.transform, "Название клана", 0.03f, 0.66f, 0.6f, 0.8f);
         InputField tagIn = Input("ClanTagInput", noArea.transform, "Тег (2-5)", 0.63f, 0.66f, 0.97f, 0.8f);
@@ -135,13 +140,21 @@ public static class ClanUIBuilder
         Button create = Btn("CreateClanButton", noArea.transform, "Создать клан", Green);
         SetRect(create.GetComponent<RectTransform>(), 0.52f, 0.5f, 0.97f, 0.62f);
 
-        // 5. Страница «Участники»
-        GameObject pageMembers = Img("PageMembers", panel.transform, new Color(0, 0, 0, 0));
+        // 6. Вкладка «Участники»
+        GameObject pageMembers = Img("Page_Members", panel.transform, new Color(0, 0, 0, 0));
         SetRect(pageMembers.GetComponent<RectTransform>(), pageX0, pageY0, pageX1, pageY1);
         Transform membersContent = Scroll("MembersScroll", pageMembers.transform, 0f, 0f, 1f, 1f, "MembersContent");
 
-        // 6. Страница «Чат»
-        GameObject pageChat = Img("PageChat", panel.transform, new Color(0, 0, 0, 0));
+        // 7. Вкладка «Заявки»: подсказка сверху и список
+        GameObject pageReq = Img("Page_Requests", panel.transform, new Color(0, 0, 0, 0));
+        SetRect(pageReq.GetComponent<RectTransform>(), pageX0, pageY0, pageX1, pageY1);
+        Text reqHint = Txt("RequestsHintText", pageReq.transform, "", 28, TextAnchor.MiddleLeft);
+        reqHint.color = new Color(0.8f, 0.9f, 1f);
+        SetRect(reqHint.rectTransform, 0.02f, 0.92f, 0.98f, 1f);
+        Transform requestsContent = Scroll("RequestsScroll", pageReq.transform, 0f, 0f, 1f, 0.9f, "RequestsContent");
+
+        // 8. Вкладка «Чат»
+        GameObject pageChat = Img("Page_Chat", panel.transform, new Color(0, 0, 0, 0));
         SetRect(pageChat.GetComponent<RectTransform>(), pageX0, pageY0, pageX1, pageY1);
         ScrollRect chatScroll = Scroll2("ClanChatScroll", pageChat.transform, 0f, 0.12f, 1f, 1f, out Transform chatContent);
         chatContent.name = "ClanChatContent";
@@ -152,13 +165,25 @@ public static class ClanUIBuilder
         Button chatSend = Btn("ClanChatSend", pageChat.transform, "Отправить", Green);
         SetRect(chatSend.GetComponent<RectTransform>(), 0.78f, 0f, 1f, 0.1f);
 
-        // 7. Страница «Топ кланов»
-        GameObject pageTop = Img("PageTop", panel.transform, new Color(0, 0, 0, 0));
+        // 9. Вкладка «Топ кланов»
+        GameObject pageTop = Img("Page_Top", panel.transform, new Color(0, 0, 0, 0));
         SetRect(pageTop.GetComponent<RectTransform>(), pageX0, pageY0, pageX1, pageY1);
         Transform topContent = Scroll("TopScroll", pageTop.transform, 0f, 0f, 1f, 1f, "TopContent");
 
-        // 8. Профиль игрока (всплывающий поверх)
-        GameObject profile = Img("ClanProfileArea", panel.transform, new Color(0.02f, 0.05f, 0.12f, 0.98f));
+        // 10. Предпросмотр клана (всплывающий)
+        GameObject preview = Img("ClanPreviewArea", panel.transform, ProfileBg);
+        SetRect(preview.GetComponent<RectTransform>(), 0.08f, 0.2f, 0.92f, 0.8f);
+        Text previewText = Txt("ClanPreviewText", preview.transform, "", 30, TextAnchor.UpperLeft);
+        SetRect(previewText.rectTransform, 0.04f, 0.74f, 0.96f, 0.98f);
+        Transform previewMembers = Scroll("ClanPreviewMembers", preview.transform, 0.02f, 0.16f, 0.98f, 0.72f, "PreviewMembersContent");
+        Button previewJoin = Btn("ClanPreviewJoin", preview.transform, "Вступить", Green);
+        SetRect(previewJoin.GetComponent<RectTransform>(), 0.04f, 0.03f, 0.48f, 0.13f);
+        Button previewClose = Btn("ClanPreviewClose", preview.transform, "Закрыть", Red);
+        SetRect(previewClose.GetComponent<RectTransform>(), 0.52f, 0.03f, 0.96f, 0.13f);
+        preview.SetActive(false);
+
+        // 11. Профиль игрока (всплывающий поверх)
+        GameObject profile = Img("ClanProfileArea", panel.transform, ProfileBg);
         SetRect(profile.GetComponent<RectTransform>(), 0.15f, 0.3f, 0.85f, 0.7f);
         Text profileText = Txt("ClanProfileText", profile.transform, "", 32, TextAnchor.UpperCenter);
         SetRect(profileText.rectTransform, 0.05f, 0.25f, 0.95f, 0.95f);
@@ -166,31 +191,38 @@ public static class ClanUIBuilder
         SetRect(profileClose.GetComponent<RectTransform>(), 0.3f, 0.05f, 0.7f, 0.2f);
         profile.SetActive(false);
 
-        // 9. Логика: ссылки
+        // 12. Логика: ссылки на объекты
         ClanUI ui = canvasGo.AddComponent<ClanUI>();
         ui.clanButton = clanButton;
         ui.panel = panel;
         ui.closeButton = close;
         ui.statusText = status;
         ui.tabButtons = tabs;
-        ui.tabPages = new GameObject[] { pageClan, pageMembers, pageChat, pageTop };
+        ui.tabPages = new GameObject[] { pageClan, pageMembers, pageReq, pageChat, pageTop };
         ui.myClanArea = myArea;
         ui.infoText = info;
         ui.leaveButton = leave;
         ui.joinTypeButton = joinType;
         ui.joinTypeLabel = joinType.GetComponentInChildren<Text>();
-        ui.membersContent = membersContent;
         ui.noClanArea = noArea;
         ui.nameInput = nameIn;
         ui.tagInput = tagIn;
         ui.createButton = create;
         ui.createJoinTypeButton = createType;
         ui.createJoinTypeLabel = createType.GetComponentInChildren<Text>();
-        ui.topContent = topContent;
+        ui.membersContent = membersContent;
+        ui.requestsContent = requestsContent;
+        ui.requestsHint = reqHint;
         ui.chatScroll = chatScroll;
         ui.chatText = chatText;
         ui.chatInput = chatIn;
         ui.chatSendButton = chatSend;
+        ui.topContent = topContent;
+        ui.previewArea = preview;
+        ui.previewText = previewText;
+        ui.previewMembersContent = previewMembers;
+        ui.previewJoinButton = previewJoin;
+        ui.previewCloseButton = previewClose;
         ui.profileArea = profile;
         ui.profileText = profileText;
         ui.profileCloseButton = profileClose;
@@ -273,7 +305,7 @@ public static class ClanUIBuilder
         GameObject go = Img(name, parent, color);
         Button b = go.AddComponent<Button>();
         b.targetGraphic = go.GetComponent<Image>();
-        Text t = Txt(name + "Label", go.transform, label, 28, TextAnchor.MiddleCenter);
+        Text t = Txt(name + "Label", go.transform, label, 26, TextAnchor.MiddleCenter);
         SetStretch(t.rectTransform, 0, 0, 1, 1);
         return b;
     }

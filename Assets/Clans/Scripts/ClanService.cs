@@ -103,6 +103,72 @@ public class ClanService : MonoBehaviour
         }));
     }
 
+    // Статистика кланов (view clan_stats): участники и сумма звёзд
+    [Serializable]
+    public class ClanStatRow
+    {
+        public double clan_id;
+        public string name;
+        public string tag;
+        public string join_type;
+        public string leader_id;
+        public double members;
+        public double total_stars;
+    }
+
+    [Serializable] private class ClanStatListWrap { public List<ClanStatRow> items; }
+
+    public void GetTopClanStats(int limit, Action<List<ClanStatRow>, string> done)
+    {
+        string url = $"{Url}/rest/v1/clan_stats?select=*&order=total_stars.desc,clan_id.asc&limit={limit}";
+        StartCoroutine(Get(url, (ok, body, err) =>
+        {
+            if (!ok) { done?.Invoke(null, err); return; }
+            ClanStatListWrap c = JsonUtility.FromJson<ClanStatListWrap>("{\"items\":" + body + "}");
+            done?.Invoke(c != null ? c.items : new List<ClanStatRow>(), null);
+        }));
+    }
+
+    // Одна строка статистики клана
+    public void GetClanStat(long clanId, Action<ClanStatRow, string> done)
+    {
+        string url = $"{Url}/rest/v1/clan_stats?select=*&clan_id=eq.{clanId}";
+        StartCoroutine(Get(url, (ok, body, err) =>
+        {
+            if (!ok) { done?.Invoke(null, err); return; }
+            ClanStatListWrap c = JsonUtility.FromJson<ClanStatListWrap>("{\"items\":" + body + "}");
+            done?.Invoke(c != null && c.items.Count > 0 ? c.items[0] : null, null);
+        }));
+    }
+
+    // Заявки в клан (только лидер увидит их в интерфейсе)
+    [Serializable]
+    public class RequestRow
+    {
+        public double clan_id;
+        public string player_id;
+    }
+
+    [Serializable] private class RequestListWrap { public List<RequestRow> items; }
+
+    public void GetRequests(long clanId, Action<List<RequestRow>, string> done)
+    {
+        string url = $"{Url}/rest/v1/clan_requests?select=clan_id,player_id&clan_id=eq.{clanId}&order=created_at.asc";
+        StartCoroutine(Get(url, (ok, body, err) =>
+        {
+            if (!ok) { done?.Invoke(null, err); return; }
+            RequestListWrap r = JsonUtility.FromJson<RequestListWrap>("{\"items\":" + body + "}");
+            done?.Invoke(r != null ? r.items : new List<RequestRow>(), null);
+        }));
+    }
+
+    // Лидер отклоняет заявку
+    public void RejectRequest(long clanId, string playerId, Action<string> done)
+    {
+        string url = $"{Url}/rest/v1/clan_requests?clan_id=eq.{clanId}&player_id=eq.{playerId}";
+        StartCoroutine(Send("DELETE", url, "{}", (ok, text, err) => done?.Invoke(ok ? null : err)));
+    }
+
     // Участники клана (до 50)
     public void GetMembers(long clanId, Action<List<ClanMemberData>, string> done)
     {
