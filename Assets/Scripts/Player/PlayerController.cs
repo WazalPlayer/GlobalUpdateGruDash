@@ -61,7 +61,7 @@ public float ballFlipForce = 4f;   // начальная скорость при
     [Header("Geometry Dash feel (куб)")]
     [SerializeField] private float cubeSpinFraction = 0.8f; // доля времени полёта, за которую куб делает 90°
     [SerializeField] private float cubeMaxFallSpeed = 20f;  // максимальная скорость падения куба
-    [SerializeField] private bool holdToJump = true;       // зажатие (ЛКМ, пробел, Shift, касание) прыгает само при приземлении
+    [SerializeField] private bool cubeHoldToJump = true;       // зажатие (ЛКМ, пробел, Shift, касание) прыгает само при приземлении
     [SerializeField] private Vector3 cubeSpriteOffset = Vector3.zero;
     [SerializeField] private bool inheritMainSpriteColor = true;
     
@@ -506,6 +506,9 @@ private List<PracticeStartPoint> practicePoints = new List<PracticeStartPoint>()
         }
         else if (currentMode == PlayerMode.Cube)
         {
+            // Земля определяется проверкой под кубом, а не событиями столкновений (они давали ложное «в воздухе» и вращение на земле)
+            isGrounded = CubeProbeGround();
+
             // Куб сам ведёт вертикальную скорость: гравитация Unity выключена,
             // поэтому высота и время прыжка не зависят от внешних сил и импульсов.
             rb.gravityScale = 0f;
@@ -910,7 +913,7 @@ else
     else
     {
         // Куб: зажатие прыгает само, как в Geometry Dash
-        if (currentMode == PlayerMode.Cube && holdToJump &&
+        if (currentMode == PlayerMode.Cube && cubeHoldToJump &&
             IsJumpHeld() &&
             (isGrounded || coyoteTimer > 0))
         {
@@ -919,7 +922,7 @@ else
         }
 
         // Шар: зажатие переворачивает гравитацию, пока кнопка держится и шар касается поверхности
-        if (currentMode == PlayerMode.Ball && holdToJump && IsJumpHeld() &&
+        if (currentMode == PlayerMode.Ball && cubeHoldToJump && IsJumpHeld() &&
             isGrounded && ballFlipTimer <= 0f)
         {
             FlipBallGravity(true);
@@ -1316,6 +1319,21 @@ public void FlipBallGravity(bool forceGroundCheck = false)
             // Для других режимов просто инвертируем гравитацию
             rb.gravityScale *= -1;
         }
+    }
+
+    // Лучом вниз проверяем, стоит ли куб на поверхности (normal смотрит вверх)
+    private bool CubeProbeGround()
+    {
+        Collider2D col = (cubeCollider != null && cubeCollider.enabled) ? cubeCollider : GetComponent<Collider2D>();
+        if (col == null) return false;
+        Bounds b = col.bounds;
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(b.center, new Vector2(b.size.x * 0.8f, 0.04f), 0f, Vector2.down, b.extents.y + 0.06f, ~0);
+        foreach (RaycastHit2D h in hits)
+        {
+            if (h.collider == null || h.collider.transform.IsChildOf(transform)) continue;
+            if (h.normal.y > 0.5f) return true;
+        }
+        return false;
     }
 
     // Ввод для прыжка: ЛКМ, пробел, Shift или касание экрана (зажатие)

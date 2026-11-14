@@ -14,7 +14,7 @@ public static class PlayerCubeDefaults
         "jumpForce",
         "cubeGravity",
         "cubeMaxFallSpeed",
-        "holdToJump"
+        "cubeHoldToJump"
     };
 
     [MenuItem("Tools/Player/Reset Cube Defaults")]
