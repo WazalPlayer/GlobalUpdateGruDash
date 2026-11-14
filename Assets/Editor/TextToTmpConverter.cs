@@ -445,6 +445,12 @@ public static class TextToTmpConverter
     private static TMP_FontAsset PrepareFont()
     {
         TMP_FontAsset font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(TmpAssetPath);
+        // Битый ассет без материала (сохранился неполным) пересоздаём
+        if (font != null && font.material == null)
+        {
+            AssetDatabase.DeleteAsset(TmpAssetPath);
+            font = null;
+        }
         if (font == null)
         {
             Font ttf = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
