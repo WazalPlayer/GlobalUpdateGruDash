@@ -15,7 +15,7 @@ public static class FirebaseSettings
     // Манифест версий, лежит в репозитории GitHub, например
     // https://raw.githubusercontent.com/OWNER/REPO/main/version.json
     // Формат: {"version":"1.0.1","url":"https://...","notes":"..."}
-    public const string UpdateManifestUrl = "PASTE_GITHUB_RAW_VERSION_JSON_URL";
+    public const string UpdateManifestUrl = "https://raw.githubusercontent.com/WazalPlayer/GlobalUpdateGruDash/main/version.json";
 
     public const int ChatMaxLength = 200;
     public const int ChatHistoryCount = 50;
