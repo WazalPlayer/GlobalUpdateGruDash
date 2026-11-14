@@ -194,6 +194,37 @@ public class ClanService : MonoBehaviour
         StartCoroutine(Send("POST", url, body, (ok, t, err) => done?.Invoke(ok ? null : err)));
     }
 
+    // Ники и статистика игроков по их id (таблица accounts)
+    [Serializable]
+    public class AccountRow
+    {
+        public string player_id;
+        public string player_name;
+        public double stars;
+        public double demons;
+        public string created_at;
+    }
+
+    [Serializable] private class AccountListWrap { public List<AccountRow> items; }
+
+    public void GetAccounts(List<string> playerIds, Action<List<AccountRow>, string> done)
+    {
+        if (playerIds == null || playerIds.Count == 0) { done?.Invoke(new List<AccountRow>(), null); return; }
+        StringBuilder sb = new StringBuilder();
+        foreach (string id in playerIds)
+        {
+            if (sb.Length > 0) sb.Append(',');
+            sb.Append('"').Append(id).Append('"');
+        }
+        string url = $"{Url}/rest/v1/accounts?select=player_id,player_name,stars,demons,created_at&player_id=in.({UnityWebRequest.EscapeURL(sb.ToString()).Replace("+", "%20")})";
+        StartCoroutine(Get(url, (ok, body, err) =>
+        {
+            if (!ok) { done?.Invoke(null, err); return; }
+            AccountListWrap a = JsonUtility.FromJson<AccountListWrap>("{\"items\":" + body + "}");
+            done?.Invoke(a != null ? a.items : new List<AccountRow>(), null);
+        }));
+    }
+
     // ---------- Низкоуровневые запросы ----------
 
     private IEnumerator Get(string url, Action<bool, string, string> done)
