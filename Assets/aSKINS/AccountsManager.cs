@@ -11,8 +11,8 @@ public class AccountsManager : MonoBehaviour
     public static AccountsManager Instance { get; private set; }
 
     [Header("Supabase Settings")]
-    public string supabaseUrl = "https://nrkwqjuavktjmfalvigc.supabase.co";
-    public string supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ya3dxanVhdmt0am1mYWx2aWdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY0NDM0ODAsImV4cCI6MjA1MjAxOTQ4MH0.UDczHJnqG0dVl0yAGyT_f_9qSzQvUYt-qrwis_NmQeI";
+    public string supabaseUrl = "https://fiwfzjcceqiaisesmxas.supabase.co";
+    public string supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpd2Z6amNjZXFpYWlzZXNteGFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NjMwNzEsImV4cCI6MjA4NzMzOTA3MX0.v7Qi-gjrTsqXlAD_Zmq_vkfVfQCKpuNgPCyW9aj1pGw";
     public string accountsTable = "accounts";
     
     [Header("Debug")]

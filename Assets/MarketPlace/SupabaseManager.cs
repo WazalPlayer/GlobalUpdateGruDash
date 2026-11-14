@@ -10,8 +10,8 @@ public class SupabaseManager : MonoBehaviour
     
     [Header("Supabase Settings")]
     // ИСПРАВЬТЕ URL НА ТОТ, КОТОРЫЙ РАБОТАЕТ (nrkwqjuavktjmfalvigc)
-    public string supabaseUrl = "https://nrkwqjuavktjmfalvigc.supabase.co";
-    public string supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ya3dxanVhdmt0am1mYWx2aWdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ2MjQ2MzgsImV4cCI6MjA1MDIwMDYzOH0.6aK_U2x_8Pe4W1pPwymhKJXp2xE6g1QdFcB5kqJWR8E";
+    public string supabaseUrl = "https://fiwfzjcceqiaisesmxas.supabase.co";
+    public string supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpd2Z6amNjZXFpYWlzZXNteGFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NjMwNzEsImV4cCI6MjA4NzMzOTA3MX0.v7Qi-gjrTsqXlAD_Zmq_vkfVfQCKpuNgPCyW9aj1pGw";
     public string levelsTable = "levels";
     
     [Header("Debug")]
