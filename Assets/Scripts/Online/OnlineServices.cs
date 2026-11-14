@@ -20,5 +20,6 @@ public static class OnlineServices
         root.AddComponent<GuestAccountService>();
         root.AddComponent<FirebaseChatService>();
         root.AddComponent<UpdateChecker>();
+        root.AddComponent<ClanService>();
     }
 }
