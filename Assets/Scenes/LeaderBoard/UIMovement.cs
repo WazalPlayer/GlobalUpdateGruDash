@@ -9,6 +9,10 @@ public class UIMovement : MonoBehaviour
     [Header("Настройки движения")]
     [SerializeField] private float moveDistance = 100f;   // на сколько сдвигается каждый объект за шаг
     [SerializeField] private float moveDuration = 0.5f;   // длительность движения
+    [Tooltip("Смещение по Next (отрицательное = влево)")]
+    [SerializeField] private float nextStep = -2000f;
+    [Tooltip("Смещение по Previous (положительное = вправо)")]
+    [SerializeField] private float previousStep = 2000f;
 
     [Header("Объекты, которые двигаются вместе")]
     [SerializeField] private RectTransform[] objectsToMove;
@@ -39,7 +43,7 @@ public class UIMovement : MonoBehaviour
     {
         if (isMoving || currentIndex >= ItemCount - 1) return;
         currentIndex++;
-        StartMovement(Vector2.right * moveDistance);
+        StartMovement(new Vector2(nextStep, 0f));
     }
 
     // Previous: назад, но не левее первого пункта
@@ -47,7 +51,7 @@ public class UIMovement : MonoBehaviour
     {
         if (isMoving || currentIndex <= 0) return;
         currentIndex--;
-        StartMovement(Vector2.left * moveDistance);
+        StartMovement(new Vector2(previousStep, 0f));
     }
 
     // Удобные имена для кнопок
