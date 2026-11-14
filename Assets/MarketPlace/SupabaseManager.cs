@@ -216,7 +216,8 @@ public class SupabaseManager : MonoBehaviour
     }
 
     public const string PriorityFilter = "or=(is_rated.eq.true,difficulty.gt.5.5)";
-    public const string RegularFilter = "and=(is_rated.neq.true,difficulty.lte.5.5)";
+    // Обычные уровни: не рейтинговые (в т.ч. is_rated = NULL) и сложность ниже «Изи демон» (или не указана)
+    public const string RegularFilter = "and=(or(is_rated.is.null,is_rated.eq.false),or(difficulty.is.null,difficulty.lte.5.5))";
 
     private IEnumerator GetPriorityLevelsCoroutine(System.Action<List<SupabaseLevelData>> callback)
     {
