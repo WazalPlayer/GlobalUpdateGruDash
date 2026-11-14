@@ -109,12 +109,19 @@ alter table clan_members enable row level security;
 alter table clan_requests enable row level security;
 alter table clan_messages enable row level security;
 
+drop policy if exists "clans read" on clans;
 create policy "clans read" on clans for select using (true);
+drop policy if exists "clans write" on clans;
 create policy "clans write" on clans for all using (true) with check (true);
+drop policy if exists "clan_members read" on clan_members;
 create policy "clan_members read" on clan_members for select using (true);
+drop policy if exists "clan_members write" on clan_members;
 create policy "clan_members write" on clan_members for all using (true) with check (true);
+drop policy if exists "clan_requests all" on clan_requests;
 create policy "clan_requests all" on clan_requests for all using (true) with check (true);
+drop policy if exists "clan_messages read" on clan_messages;
 create policy "clan_messages read" on clan_messages for select using (true);
+drop policy if exists "clan_messages insert" on clan_messages;
 create policy "clan_messages insert" on clan_messages for insert with check (true);
 
 -- Роспуск клана лидером (удаляет клан, участников, заявки и сообщения)
