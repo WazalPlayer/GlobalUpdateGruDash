@@ -53,6 +53,37 @@ public static class MarketPagerBuilder
         Debug.Log("[MarketPagerBuilder] Кнопки страниц добавлены в сцену и сохранены.");
     }
 
+    // Один клик: во всех сценах проекта, где есть MarketplaceUI, добавляет кнопки страниц
+    [MenuItem("Tools/Market/Add Page Buttons to ALL Market Scenes")]
+    public static void BuildOnAllScenes()
+    {
+        if (!EditorUtility.DisplayDialog("Маркет",
+            "Добавить кнопки страниц во все сцены с MarketplaceUI? Сцены будут открыты по очереди и сохранены.",
+            "Да", "Отмена"))
+            return;
+
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+            return;
+
+        int done = 0;
+        foreach (string guid in AssetDatabase.FindAssets("t:Scene"))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            var scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
+            MarketplaceUI marketUI = Object.FindObjectOfType<MarketplaceUI>(true);
+            if (marketUI == null) continue;
+
+            if (AddPager(marketUI.gameObject, "сцена " + scene.name))
+            {
+                EditorSceneManager.MarkSceneDirty(scene);
+                EditorSceneManager.SaveScene(scene);
+                done++;
+                Debug.Log("[MarketPagerBuilder] Готово: " + path);
+            }
+        }
+        Debug.Log($"[MarketPagerBuilder] Кнопки страниц добавлены в {done} сцен(ы).");
+    }
+
     // Добавляет строку страниц внутрь root (префаб или объект сцены с MarketplaceUI)
     private static bool AddPager(GameObject root, string where)
     {
