@@ -40,6 +40,10 @@ public class ClanUI : MonoBehaviour
     public Text profileText;
     public Button profileCloseButton;
 
+    [Header("Вкладки")]
+    public Button[] tabButtons;         // Клан, Участники, Чат, Топ кланов
+    public GameObject[] tabPages;       // соответствующие страницы
+
     [Header("Шаблон строки (выключен)")]
     public GameObject rowTemplate;      // текст и кнопка внутри; выключен на сцене
 
@@ -64,6 +68,27 @@ public class ClanUI : MonoBehaviour
         if (chatSendButton != null) chatSendButton.onClick.AddListener(SendChat);
         if (profileCloseButton != null) profileCloseButton.onClick.AddListener(() => profileArea.SetActive(false));
         RefreshCreateType();
+
+        if (tabButtons != null)
+        {
+            for (int i = 0; i < tabButtons.Length; i++)
+            {
+                int index = i;
+                if (tabButtons[i] != null) tabButtons[i].onClick.AddListener(() => SelectTab(index));
+            }
+        }
+        SelectTab(0);
+    }
+
+    // Показать одну вкладку; остальные скрыть
+    public void SelectTab(int index)
+    {
+        if (tabPages == null) return;
+        for (int i = 0; i < tabPages.Length; i++)
+            if (tabPages[i] != null) tabPages[i].SetActive(i == index);
+
+        // Топ грузим при открытии вкладки, иначе список пустой
+        if (index == 3 && panel != null && panel.activeInHierarchy) LoadTop();
     }
 
     private void Update()
@@ -124,10 +149,16 @@ public class ClanUI : MonoBehaviour
         if (infoText != null)
             infoText.text = $"[{clan.tag}] {clan.name}\nЗвёзды: {clan.stars}\nТип вступления: {TypeName(clan.join_type)}";
         if (joinTypeButton != null) joinTypeButton.gameObject.SetActive(isLeader);
+        if (leaveButton != null)
+        {
+            Text lbl = leaveButton.GetComponentInChildren<Text>(true);
+            if (lbl != null) lbl.text = isLeader ? "Распустить клан" : "Выйти из клана";
+        }
         if (joinTypeLabel != null) joinTypeLabel.text = TypeName(clan.join_type);
 
         LoadMembers(clan);
         LoadChat();
+        LoadTop();
         chatTimer = ChatPollSeconds;
         SetStatus("");
     }
@@ -162,6 +193,7 @@ public class ClanUI : MonoBehaviour
 
     private void LoadTop()
     {
+        if (ClanService.Instance == null) return;
         ClanService.Instance.GetTopClans(50, (clans, err) =>
         {
             if (err != null) { SetStatus("Топ кланов: " + err); return; }
@@ -211,15 +243,33 @@ public class ClanUI : MonoBehaviour
         });
     }
 
+    // Участник выходит сразу. Лидер: первое нажатие — подтверждение, второе — роспуск клана
+    private float disbandArmedUntil = -1f;
+
     private void Leave()
     {
-        ClanService.Instance.LeaveClan(err =>
+        if (isLeader)
         {
-            if (err != null)
+            if (Time.unscaledTime > disbandArmedUntil)
             {
-                SetStatus(err == "leader_cannot_leave" ? "Лидер не может выйти из клана" : "Ошибка: " + err);
+                disbandArmedUntil = Time.unscaledTime + 4f;
+                SetStatus("Нажмите ещё раз, чтобы распустить клан (участники и чат будут удалены)");
                 return;
             }
+            disbandArmedUntil = -1f;
+            ClanService.Instance.DisbandClan(err =>
+            {
+                if (err != null) { SetStatus("Ошибка роспуска: " + err); return; }
+                SetStatus("Клан распущен");
+                Refresh();
+            });
+            return;
+        }
+
+        ClanService.Instance.LeaveClan(err =>
+        {
+            if (err != null) { SetStatus("Ошибка выхода: " + err); return; }
+            SetStatus("Вы вышли из клана");
             Refresh();
         });
     }

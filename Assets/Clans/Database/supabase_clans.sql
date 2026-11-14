@@ -116,3 +116,13 @@ create policy "clan_members write" on clan_members for all using (true) with che
 create policy "clan_requests all" on clan_requests for all using (true) with check (true);
 create policy "clan_messages read" on clan_messages for select using (true);
 create policy "clan_messages insert" on clan_messages for insert with check (true);
+
+-- Роспуск клана лидером (удаляет клан, участников, заявки и сообщения)
+create or replace function disband_clan(p_player text)
+returns void language plpgsql as $$
+begin
+  if not exists (select 1 from clan_members where player_id = p_player and role = 'leader') then
+    raise exception 'not_leader';
+  end if;
+  delete from clans where leader_id = p_player;
+end $$;

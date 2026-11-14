@@ -147,6 +147,13 @@ public class ClanService : MonoBehaviour
         StartCoroutine(Rpc("leave_clan", body, (ok, text, err) => done?.Invoke(ok ? null : err)));
     }
 
+    // Лидер распускает клан (удаляются участники, заявки и чат)
+    public void DisbandClan(Action<string> done)
+    {
+        string body = "{\"p_player\":\"" + Esc(PlayerId) + "\"}";
+        StartCoroutine(Rpc("disband_clan", body, (ok, text, err) => done?.Invoke(ok ? null : err)));
+    }
+
     // Лидер: принять заявку игрока
     public void ApproveRequest(long clanId, string playerId, Action<string, string> done)
     {
