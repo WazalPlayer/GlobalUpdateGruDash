@@ -437,7 +437,10 @@ public static class TextToTmpConverter
         EditorPrefs.DeleteKey(PhaseKey);
         if (File.Exists(RefsPath)) File.Delete(RefsPath);
         AssetDatabase.Refresh();
-        Debug.Log($"[TextToTmp] Откат выполнен: восстановлено {restored} файлов. Резервная копия сохранена в {Path.GetFullPath(BackupDir)}, удалите её вручную, если она больше не нужна.");
+        // Файлы восстановлены из копии, сама копия больше не нужна: удаляем, чтобы можно было снова запустить преобразование
+        try { Directory.Delete(BackupDir, true); }
+        catch (IOException ex) { Debug.LogWarning("[TextToTmp] Не удалось удалить резервную копию: " + ex.Message); }
+        Debug.Log($"[TextToTmp] Откат выполнен: восстановлено {restored} файлов. Резервная копия удалена, преобразование можно запускать снова.");
     }
 
     // ---------- Шрифт ----------
