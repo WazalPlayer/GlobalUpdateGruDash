@@ -1,40 +1,6 @@
-# Unity generated folders
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-[Ll]ogs/
-[Uu]ser[Ss]ettings/
-[Mm]emoryCaptures/
-[Rr]ecordings/
-
-# Visual Studio / Rider
-.vs/
-.vscode/
-.idea/
-*.csproj
-*.unityproj
-*.sln
-*.suo
-*.user
-*.userprefs
-*.pidb
-*.booproj
-*.svd
-*.pdb.meta
-*.mdb
-*.opendb
-*.VC.db
-
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Backups and archives
-*.zip
-*.tar.gz
-*.apk
-*.aab
-*.unitypackage
+﻿# Публикуем на GitHub только манифест обновления и APK.
+# Всё остальное (исходники Unity-проекта) локально, но в git не попадает.
+*
+!.gitignore
+!version.json
+!*.apk
